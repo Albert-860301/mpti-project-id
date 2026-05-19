@@ -506,7 +506,11 @@ function SharePreview({ result, images, strings, onClose }) {
 }
 
 /* ── LOGIN SHEET ─────────────────────────────────────────────── */
-function LoginSheet({ onClose, onSuccess, strings, monthlyWaste }) {
+function LoginSheet({ onClose, onSuccess, strings, monthlyWaste, lineOaUrl }) {
+  const handleLine = () => {
+    if (lineOaUrl) window.open(lineOaUrl, "_blank");
+    onSuccess();
+  };
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}
       style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex", alignItems: "flex-end", justifyContent: "center", padding: 12, background: "rgba(15,23,42,.34)", backdropFilter: "blur(8px)" }}>
@@ -522,7 +526,7 @@ function LoginSheet({ onClose, onSuccess, strings, monthlyWaste }) {
         <div style={{ fontSize: 30 }}>🔒</div>
         <h3 style={{ fontSize: 25, fontWeight: 950, margin: "4px 0 0", color: C.text }}>{strings.loginTitle}</h3>
         <p style={{ color: C.muted, fontSize: 13, lineHeight: 1.5, marginTop: 5 }}>{strings.loginSubtitle}</p>
-        <motion.button onClick={onSuccess} whileTap={{ scale: 0.96 }} style={{ ...primaryBtn(C.green, "#00B843"), marginTop: 16 }}>{strings.loginLineBtn}</motion.button>
+        <motion.button onClick={handleLine} whileTap={{ scale: 0.96 }} style={{ ...primaryBtn(C.green, "#00B843"), marginTop: 16 }}>{strings.loginLineBtn}</motion.button>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginTop: 12, textAlign: "center", color: C.faint, fontSize: 10, fontWeight: 700 }}>
           {[strings.loginPrivacy1, strings.loginPrivacy2, strings.loginPrivacy3].map(t => (
             <div key={t} style={{ padding: 10, borderRadius: 12, background: C.card2 }}>✓<br />{t}</div>
@@ -625,7 +629,7 @@ function MPTIAppContent() {
         {phase === "plan"   && result && <PlanScreen result={result} cards={cards} cardImages={cardImages} onBack={() => setPhase("result")} onClaim={() => setShowLogin(true)} strings={strings} isMobile={isMobile} />}
       </AnimatePresence>
       <AnimatePresence>{showShare && result && <SharePreview result={result} images={images} strings={strings} onClose={() => setShowShare(false)} />}</AnimatePresence>
-      <AnimatePresence>{showLogin && <LoginSheet onClose={() => setShowLogin(false)} onSuccess={() => { setShowLogin(false); setShowSuccess(true); }} strings={strings} monthlyWaste={result?.monthlyWaste} />}</AnimatePresence>
+      <AnimatePresence>{showLogin && <LoginSheet onClose={() => setShowLogin(false)} onSuccess={() => { setShowLogin(false); setShowSuccess(true); }} strings={strings} monthlyWaste={result?.monthlyWaste} lineOaUrl={settings.lineOaUrl} />}</AnimatePresence>
       <AnimatePresence>{showSuccess && <SuccessModal onClose={closeSuccess} strings={strings} />}</AnimatePresence>
     </Shell>
   );

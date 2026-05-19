@@ -260,6 +260,7 @@ export const DEFAULT_SETTINGS = {
   // Cloudinary image hosting (required for image uploads on Vercel)
   cloudinaryCloudName: "dglzki3sy",
   cloudinaryUploadPreset: "mpti_upload",
+  lineOaUrl: "",
 };
 
 // ─── DEFAULT EQUIV REFERENCES ───────────────────────────────────

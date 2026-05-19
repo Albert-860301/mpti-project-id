@@ -1083,6 +1083,14 @@ function SettingsEditor() {
         </div>
       ))}
 
+      {sectionCard("💚 LINE Official Account URL", (
+        <div style={{ display: "grid", gap: 8 }}>
+          <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>点击「LINE 登录」按钮跳转的加好友链接</label>
+          <input value={settings.lineOaUrl || ""} onChange={e => upSetting("lineOaUrl", e.target.value)} placeholder="https://line.me/R/ti/p/@xxxxxxxx 或 https://lin.ee/xxxxxx" style={inputStyle(true)} />
+          <p style={{ fontSize: 11, color: S.muted, margin: 0 }}>在 LINE Official Account Manager → 加好友链接 中获取。留空则仅显示成功弹窗不跳转。</p>
+        </div>
+      ))}
+
       {sectionCard("🔗 Redfinger CTA URL", (
         <div>
           <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>点击「Cloud Phone」按钮跳转的链接</label>
