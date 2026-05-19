@@ -90,8 +90,30 @@ function compressImg(dataUrl, maxW, maxH, quality = 0.82) {
   });
 }
 
-// Save image to public/ via Vite dev server API; returns URL or null (fallback to base64)
+// Save image — uses Cloudinary when configured (production), falls back to local Vite API (dev)
 async function saveImageToDisk(folder, filename, dataUrl) {
+  const settings = getSettings();
+  const cloudName = settings.cloudinaryCloudName?.trim();
+  const preset = settings.cloudinaryUploadPreset?.trim();
+
+  // ── Cloudinary path (production) ──────────────────────────────
+  if (cloudName && preset) {
+    try {
+      const publicId = `mpti/${folder}/${filename.replace(/\.[^.]+$/, "")}`;
+      const formData = new FormData();
+      formData.append("file", dataUrl);
+      formData.append("upload_preset", preset);
+      formData.append("public_id", publicId);
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.secure_url) return data.secure_url;
+    } catch { /* fall through */ }
+  }
+
+  // ── Local Vite dev server API (development) ───────────────────
   try {
     const res = await fetch("/api/save-image", {
       method: "POST",
@@ -1034,6 +1056,30 @@ function SettingsEditor() {
           </div>
           {pwErr && <p style={{ gridColumn:"1/-1", color: S.red, fontSize: 12, margin: 0 }}>{pwErr}</p>}
           <p style={{ gridColumn:"1/-1", fontSize: 11, color: S.muted, margin: 0 }}>⚠️ 密码保存在 localStorage，更改后刷新页面需重新登录。</p>
+        </div>
+      ))}
+
+      {sectionCard("☁️ Cloudinary 图片托管（上线必填）", (
+        <div style={{ display: "grid", gap: 10 }}>
+          <p style={{ fontSize: 12, color: S.muted, margin: 0 }}>
+            在 Vercel 等静态托管上，图片上传需要 Cloudinary。<br />
+            注册免费账号 → <b>cloudinary.com</b> → Dashboard 拿 Cloud Name，Settings → Upload → Add upload preset（Mode: Unsigned）拿 Preset Name。
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+            <div>
+              <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Cloud Name</label>
+              <input value={settings.cloudinaryCloudName || ""} onChange={e => upSetting("cloudinaryCloudName", e.target.value)} placeholder="e.g. my-cloud-abc" style={inputStyle(true)} />
+            </div>
+            <div>
+              <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Upload Preset（Unsigned）</label>
+              <input value={settings.cloudinaryUploadPreset || ""} onChange={e => upSetting("cloudinaryUploadPreset", e.target.value)} placeholder="e.g. mpti_unsigned" style={inputStyle(true)} />
+            </div>
+          </div>
+          {settings.cloudinaryCloudName && settings.cloudinaryUploadPreset ? (
+            <p style={{ fontSize: 11, color: S.green, margin: 0, fontWeight: 700 }}>✅ 已配置，图片上传将走 Cloudinary</p>
+          ) : (
+            <p style={{ fontSize: 11, color: S.orange, margin: 0, fontWeight: 700 }}>⚠️ 未配置，图片只保存在本地浏览器（上线后会丢失）</p>
+          )}
         </div>
       ))}
 

@@ -257,6 +257,9 @@ export const DEFAULT_SETTINGS = {
   fakeCountMin: 10000,
   fakeCountMax: 15000,
   fakeCountThreshold: 13324,
+  // Cloudinary image hosting (required for image uploads on Vercel)
+  cloudinaryCloudName: "",
+  cloudinaryUploadPreset: "",
 };
 
 // ─── DEFAULT EQUIV REFERENCES ───────────────────────────────────
