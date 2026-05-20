@@ -795,6 +795,14 @@ function ImageManager() {
   const refreshImages = () => { setImages(getImages()); setCacheBust(Date.now()); };
 
   const [recovering, setRecovering] = useState(false);
+  // Test if a URL is a loadable image (bypasses CORS issues that block fetch HEAD)
+  const testImage = (url) => new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = url;
+  });
+
   const recoverFromCloudinary = async () => {
     setRecovering(true);
     setStatus("正在从 Cloudinary 恢复图片…");
@@ -807,42 +815,34 @@ function ImageManager() {
     const allKeys = Object.keys(types);
 
     for (const key of allKeys) {
-      // Try baked version first, then raw
+      // Try baked version first, then raw — use Image() to test (no CORS issues)
       const bakedUrl = `https://res.cloudinary.com/${cloudName}/image/upload/mpti/types/${key}_baked.jpg`;
       const rawUrl   = `https://res.cloudinary.com/${cloudName}/image/upload/mpti/types/${key}.jpg`;
 
-      try {
-        const res = await fetch(bakedUrl, { method: "HEAD" });
-        if (res.ok) {
-          recovered[key] = bakedUrl;
-          recoveredRaw[key] = rawUrl;
-          setStatus(`✓ 找到 ${key} (已合成版)`);
-          continue;
-        }
-      } catch (_) {}
-
-      try {
-        const res = await fetch(rawUrl, { method: "HEAD" });
-        if (res.ok) {
-          recovered[key] = rawUrl;
-          recoveredRaw[key] = rawUrl;
-          setStatus(`✓ 找到 ${key} (原图)`);
-          continue;
-        }
-      } catch (_) {}
-
+      if (await testImage(bakedUrl)) {
+        recovered[key] = bakedUrl;
+        // Also check if raw exists for future re-baking
+        recoveredRaw[key] = (await testImage(rawUrl)) ? rawUrl : bakedUrl;
+        setStatus(`✓ 找到 ${key}`);
+        continue;
+      }
+      if (await testImage(rawUrl)) {
+        recovered[key] = rawUrl;
+        recoveredRaw[key] = rawUrl;
+        setStatus(`✓ 找到 ${key} (原图)`);
+        continue;
+      }
       setStatus(`✗ 未找到 ${key}`);
     }
 
     const count = Object.keys(recovered).length;
     if (count > 0) {
-      // Save to localStorage
       for (const [k, v] of Object.entries(recovered)) { saveImage(k, v); }
       for (const [k, v] of Object.entries(recoveredRaw)) { saveImageRaw(k, v); }
       setImages(getImages());
       setCacheBust(Date.now());
       await syncToServer();
-      setStatus(`✅ 恢复了 ${count}/${allKeys.length} 张图片并已同步`);
+      setStatus(`✅ 恢复了 ${count}/${allKeys.length} 张图片并已同步到云端`);
     } else {
       setStatus("❌ Cloudinary 上未找到任何图片，需要重新上传");
     }
@@ -1270,12 +1270,30 @@ function OverlaySettings({ settings, upSetting, onImagesUpdated }) {
       const images = getImages();
       const rawImages = getImagesRaw();
       let sampleUrl = null;
+
+      // 1. Try stored images first
       for (const [key, url] of Object.entries(images)) {
         if (!url || key === "__overlay_logo__") continue;
         sampleUrl = rawImages[key] || url;
         break;
       }
-      if (!sampleUrl) { alert("没有可用的图片，请先上传至少一张人格图"); setPreviewing(false); return; }
+
+      // 2. If no stored images, try constructing a Cloudinary URL directly
+      if (!sampleUrl) {
+        const cloudName = settings.cloudinaryCloudName?.trim();
+        if (cloudName) {
+          const types = getTypes();
+          const firstKey = Object.keys(types)[0];
+          if (firstKey) {
+            const tryUrl = `https://res.cloudinary.com/${cloudName}/image/upload/mpti/types/${firstKey}_baked.jpg`;
+            // Test if it loads
+            const ok = await new Promise(r => { const i = new Image(); i.onload = () => r(true); i.onerror = () => r(false); i.src = tryUrl; });
+            if (ok) sampleUrl = tryUrl;
+          }
+        }
+      }
+
+      if (!sampleUrl) { alert("没有可用的图片，请先上传或恢复至少一张人格图"); setPreviewing(false); return; }
 
       const logoSrc = getOverlayLogo() || null;
       const blobUrl = await buildShareImageAdmin(sampleUrl, {
