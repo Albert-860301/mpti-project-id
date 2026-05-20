@@ -305,9 +305,11 @@ export const DEFAULT_STRINGS = {
 
   // Result screen
   shareBtn: "📤 แชร์ผลลัพธ์ใน LINE",
+  shareBtnNoLine: "💾 บันทึกผลลัพธ์",
   shareSaveBtn: "💾 บันทึกรูป",
   shareCopyBtn: "📋 คัดลอกรูป",
   shareLongPress: "长按图片 → 储存至相册",
+  shareLongPressNoLine: "长按图片保存到相册",
   planCtaBtn: "🎯 ดูแผนเอาเงินคืน ↓",
   resultLabel: "MPTI RESULT",
   wasteLabel: "คุณเสียเงินไปโดยไม่รู้ตัว",

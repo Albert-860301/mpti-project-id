@@ -946,8 +946,10 @@ function StringsEditor() {
           {field("Waste label (above amount)", "wasteLabel")}
           {field("Per month suffix", "perMonth")}
           {field("Per year suffix", "perYear")}
-          {field("Share button (result screen)", "shareBtn")}
-          {field("Share modal — long-press hint (mobile)", "shareLongPress")}
+          {field("分享按钮（LINE 模式开启）", "shareBtn")}
+          {field("分享按钮（LINE 模式关闭）", "shareBtnNoLine")}
+          {field("长按提示（LINE 模式开启）", "shareLongPress")}
+          {field("长按提示（LINE 模式关闭）", "shareLongPressNoLine")}
           {field("Share modal — desktop copy button", "shareCopyBtn")}
           {field("Plan CTA button", "planCtaBtn")}
         </div>
@@ -1115,8 +1117,8 @@ function SettingsEditor() {
             <span style={{ fontSize: 13, fontWeight: 700, color: S.text }}>显示 LINE 登录弹窗</span>
           </label>
           <p style={{ fontSize: 11, color: S.muted, margin: 0 }}>
-            开启：点击方案卡片按钮 → 弹出 LINE 登录引导弹窗 → 跳转 LINE OA<br />
-            关闭：点击方案卡片按钮 → 直接跳转 LINE OA + 显示成功弹窗
+            <b>开启：</b>结果页显示「分享到LINE」→ 弹出 LINE 登录引导 → 跳转 LINE OA<br />
+            <b>关闭：</b>结果页改为「保存图片」引导（不提LINE）→ 卖点卡片按钮直接追踪跳 LINE OA → 弹出成功弹窗 → 引导去 H5
           </p>
         </div>
       ))}

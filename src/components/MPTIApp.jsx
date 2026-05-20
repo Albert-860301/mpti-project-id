@@ -345,7 +345,7 @@ function CalcScreen({ onDone, strings, isMobile, result, images }) {
 }
 
 /* ── RESULT ──────────────────────────────────────────────────── */
-function ResultScreen({ result, equivRefs, onShare, onPlan, onRestart, strings, isMobile }) {
+function ResultScreen({ result, equivRefs, onShare, onPlan, onRestart, strings, isMobile, showLineMode }) {
   const { personality: p, monthlyWaste } = result;
   const yearly = monthlyWaste * 12;
   const equivLabel = calcEquivLabel(monthlyWaste, equivRefs);
@@ -389,7 +389,7 @@ function ResultScreen({ result, equivRefs, onShare, onPlan, onRestart, strings, 
 
         {/* Sticky buttons */}
         <div style={{ padding: "12px 16px", paddingBottom: "max(16px, env(safe-area-inset-bottom, 16px))", borderTop: `1px solid ${C.line}`, flexShrink: 0 }}>
-          <motion.button onClick={onShare} whileTap={{ scale: 0.96 }} style={{ ...primaryBtn(C.green, "#00B843"), marginBottom: 8 }}>{strings.shareBtn}</motion.button>
+          <motion.button onClick={onShare} whileTap={{ scale: 0.96 }} style={{ ...primaryBtn(C.green, "#00B843"), marginBottom: 8 }}>{showLineMode ? strings.shareBtn : (strings.shareBtnNoLine || "💾 บันทึกผลลัพธ์")}</motion.button>
           <motion.button onClick={onPlan} whileTap={{ scale: 0.96 }} style={outlineBtn(p.color)}>{strings.planCtaBtn}</motion.button>
           <div style={{ textAlign: "center", marginTop: 10 }}>
             <button onClick={onRestart} style={{ background: "none", border: "none", color: C.faint, fontSize: 11, fontWeight: 700, cursor: "pointer", padding: "4px 8px" }}>{strings.restartBtn || "ทำแบบทดสอบใหม่"}</button>
@@ -485,7 +485,7 @@ function PlanScreen({ result, cards, cardImages, onBack, onClaim, strings, isMob
 }
 
 /* ── SHARE PREVIEW ──────────────────────────────────────────── */
-function SharePreview({ result, images, strings, onClose }) {
+function SharePreview({ result, images, strings, onClose, showLineMode }) {
   const { personality: p, typeKey } = result;
   const src = imgSrc(images[typeKey], `/images/types/${typeKey}.jpg`);
   const [status, setStatus] = useState("idle");
@@ -516,7 +516,11 @@ function SharePreview({ result, images, strings, onClose }) {
             style={{ width: "100%", height: "auto", display: "block" }} />
           {isTouch && (
             <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "10px 14px", background: "rgba(15,23,42,.62)", backdropFilter: "blur(4px)", textAlign: "center" }}>
-              <div style={{ color: "#fff", fontSize: 13, fontWeight: 800 }}>{strings?.shareLongPress || "长按图片 → 储存至相册"}</div>
+              <div style={{ color: "#fff", fontSize: 13, fontWeight: 800 }}>
+                {showLineMode
+                  ? (strings?.shareLongPress || "长按图片 → 储存至相册")
+                  : (strings?.shareLongPressNoLine || "长按图片保存到相册")}
+              </div>
             </div>
           )}
         </div>
@@ -655,10 +659,10 @@ function MPTIAppContent() {
         {phase === "start"  && <StartScreen onStart={() => setPhase("quiz")} stats={stats} fakeCount={fakeCount} coverImage={coverImage} coverContent={coverContent} settings={settings} isMobile={isMobile} types={types} images={images} />}
         {phase === "quiz"   && <QuizScreen questions={questions} questionImages={questionImages} onDone={handleDone} onBack={() => setPhase("start")} isMobile={isMobile} />}
         {phase === "calc"   && <CalcScreen onDone={handleCalc} strings={strings} isMobile={isMobile} result={result} images={images} />}
-        {phase === "result" && result && <ResultScreen result={result} equivRefs={equivRefs} onShare={() => { recordShare(); setShowShare(true); }} onPlan={() => setPhase("plan")} onRestart={() => { setResult(null); setPhase("start"); }} strings={strings} isMobile={isMobile} />}
+        {phase === "result" && result && <ResultScreen result={result} equivRefs={equivRefs} onShare={() => { recordShare(); setShowShare(true); }} onPlan={() => setPhase("plan")} onRestart={() => { setResult(null); setPhase("start"); }} strings={strings} isMobile={isMobile} showLineMode={settings.showLoginSheet !== false} />}
         {phase === "plan"   && result && <PlanScreen result={result} cards={cards} cardImages={cardImages} onBack={() => setPhase("result")} onClaim={() => { if (settings.showLoginSheet !== false) setShowLogin(true); else { if (settings.lineOaUrl) window.open(settings.lineOaUrl, "_blank"); setShowSuccess(true); } }} strings={strings} isMobile={isMobile} />}
       </AnimatePresence>
-      <AnimatePresence>{showShare && result && <SharePreview result={result} images={images} strings={strings} onClose={() => setShowShare(false)} />}</AnimatePresence>
+      <AnimatePresence>{showShare && result && <SharePreview result={result} images={images} strings={strings} onClose={() => setShowShare(false)} showLineMode={settings.showLoginSheet !== false} />}</AnimatePresence>
       <AnimatePresence>{showLogin && <LoginSheet onClose={() => setShowLogin(false)} onSuccess={() => { setShowLogin(false); setShowSuccess(true); }} strings={strings} monthlyWaste={result?.monthlyWaste} lineOaUrl={settings.lineOaUrl} />}</AnimatePresence>
       <AnimatePresence>{showSuccess && <SuccessModal onClose={closeSuccess} strings={strings} />}</AnimatePresence>
     </Shell>
