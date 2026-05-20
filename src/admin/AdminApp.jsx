@@ -141,35 +141,26 @@ function loadImgAdmin(src) {
   });
 }
 
-async function buildShareImageAdmin(src, { overlayText, overlayQrUrl, logoSrc }) {
+async function buildShareImageAdmin(src, { overlayText, overlayText2, overlayQrUrl, logoSrc }) {
   const img = await loadImgAdmin(src);
   const W = img.naturalWidth  || img.width;
   const H = img.naturalHeight || img.height;
-  const barH = Math.round(H * 0.07);
+
+  // Bar height scales with image; ~12% gives comfortable room for 2 lines + logo
+  const barH = Math.round(H * 0.12);
   const canvas = document.createElement("canvas");
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext("2d");
   ctx.drawImage(img, 0, 0, W, H);
 
-  // Logo — top-left, small
-  if (logoSrc) {
-    try {
-      const logoImg = await loadImgAdmin(logoSrc);
-      const logoH = Math.round(W * 0.07);
-      const logoW = Math.round(logoImg.naturalWidth * (logoH / logoImg.naturalHeight));
-      const pad   = Math.round(W * 0.03);
-      ctx.drawImage(logoImg, pad, pad, logoW, logoH);
-    } catch (_) {}
-  }
-
-  // Bottom bar — light gray semi-transparent
-  ctx.fillStyle = "rgba(235, 235, 235, 0.72)";
+  // ── Semi-transparent light-gray bar at bottom ──────────────────
+  ctx.fillStyle = "rgba(235, 235, 235, 0.78)";
   ctx.fillRect(0, H - barH, W, barH);
   const barY = H - barH;
-  const vPad = Math.round(barH * 0.12);
-  const hPad = Math.round(barH * 0.10);
+  const hPad = Math.round(W * 0.03);   // horizontal padding
+  const vPad = Math.round(barH * 0.1); // vertical padding
 
-  // QR code — right side
+  // ── QR code — right side ──────────────────────────────────────
   const qrSize = barH - vPad * 2;
   let qrLeftEdge = W - hPad;
   if (overlayQrUrl) {
@@ -184,21 +175,58 @@ async function buildShareImageAdmin(src, { overlayText, overlayQrUrl, logoSrc })
     } catch (_) {}
   }
 
-  // Text — left of QR, auto-shrink font
-  const textAreaW = qrLeftEdge - hPad - 8;
-  const textX     = hPad + textAreaW / 2;
-  const textY     = barY + barH / 2;
-  const text      = overlayText || "";
-  let fontSize = barH - vPad * 2;
-  ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
-  while (fontSize > 8 && ctx.measureText(text).width > textAreaW) {
-    fontSize -= 1;
-    ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+  // ── Logo — left side, vertically centered ─────────────────────
+  let contentStartX = hPad;
+  if (logoSrc) {
+    try {
+      const logoImg = await loadImgAdmin(logoSrc);
+      const logoH = Math.round(barH * 0.45);
+      const logoW = Math.round(logoImg.naturalWidth * (logoH / logoImg.naturalHeight));
+      const logoY = barY + Math.round((barH - logoH) / 2);
+      ctx.drawImage(logoImg, hPad, logoY, logoW, logoH);
+      contentStartX = hPad + logoW + Math.round(hPad * 0.8);
+    } catch (_) {}
   }
-  ctx.fillStyle = "#1a1a1a";
-  ctx.textAlign = "center";
+
+  // ── Two-line text — between logo and QR ───────────────────────
+  const textAreaW = qrLeftEdge - contentStartX - hPad;
+  const textCX    = contentStartX + textAreaW / 2;
+
+  // Line 1 — larger, regular weight
+  const line1 = overlayText  || "";
+  const line2 = overlayText2 || "";
+  const hasTwo = line1 && line2;
+
+  // Choose font sizes that fit within textAreaW
+  let fs1 = Math.round(barH * 0.26);
+  ctx.font = `400 ${fs1}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+  while (fs1 > 8 && ctx.measureText(line1).width > textAreaW) { fs1--; ctx.font = `400 ${fs1}px 'Kanit', 'Noto Sans Thai', sans-serif`; }
+
+  let fs2 = Math.round(barH * 0.20);
+  ctx.font = `300 ${fs2}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+  while (fs2 > 7 && ctx.measureText(line2).width > textAreaW) { fs2--; ctx.font = `300 ${fs2}px 'Kanit', 'Noto Sans Thai', sans-serif`; }
+
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(text, textX, textY);
+
+  if (hasTwo) {
+    const lineGap  = Math.round(barH * 0.06);
+    const blockH   = fs1 + lineGap + fs2;
+    const startY   = barY + Math.round((barH - blockH) / 2);
+
+    ctx.font = `400 ${fs1}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fillText(line1, textCX, startY + fs1 / 2);
+
+    ctx.font = `300 ${fs2}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+    ctx.fillStyle = "#444444";
+    ctx.fillText(line2, textCX, startY + fs1 + lineGap + fs2 / 2);
+  } else {
+    const single = line1 || line2;
+    ctx.font = `400 ${fs1}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fillText(single, textCX, barY + barH / 2);
+  }
 
   return new Promise(resolve => canvas.toBlob(b => resolve(URL.createObjectURL(b)), "image/jpeg", 0.92));
 }
@@ -220,6 +248,7 @@ async function bakeAndUpload(key, rawUrl, settings) {
   const logoSrc = getOverlayLogo() || null;
   const blobUrl = await buildShareImageAdmin(rawUrl, {
     overlayText:  settings.overlayText,
+    overlayText2: settings.overlayText2,
     overlayQrUrl: settings.overlayQrUrl,
     logoSrc,
   });
@@ -1207,10 +1236,16 @@ function OverlaySettings({ settings, upSetting }) {
         <span style={{ fontSize: 13, fontWeight: 700, color: S.text }}>启用底栏 Overlay</span>
       </label>
       {settings.overlayEnabled !== false && (<>
-        <div>
-          <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>引导文字</label>
-          <input value={settings.overlayText || ""} onChange={e => upSetting("overlayText", e.target.value)} style={inputStyle()} />
-          <p style={{ fontSize: 10, color: S.muted, marginTop: 4 }}>底栏背景为半透明浅灰色（固定），文字为深色。</p>
+        <div style={{ display: "grid", gap: 8 }}>
+          <div>
+            <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>第一行文字（较大，常规字重）</label>
+            <input value={settings.overlayText || ""} onChange={e => upSetting("overlayText", e.target.value)} style={inputStyle()} placeholder="e.g. สแกนทดสอบ MPTI ของคุณ" />
+          </div>
+          <div>
+            <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>第二行文字（较小，细字重，灰色）</label>
+            <input value={settings.overlayText2 || ""} onChange={e => upSetting("overlayText2", e.target.value)} style={inputStyle()} placeholder="e.g. ค้นพบบุคลิกการใช้เงินของคุณ →" />
+          </div>
+          <p style={{ fontSize: 10, color: S.muted, margin: 0 }}>底栏：Logo（左）+ 两行文字（中）+ 二维码（右）。背景为半透明浅灰，文字深色不加粗。</p>
         </div>
         <div>
           <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>二维码 URL（扫码跳转的链接）</label>

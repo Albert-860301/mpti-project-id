@@ -265,7 +265,8 @@ export const DEFAULT_SETTINGS = {
   // Share image overlay bar
   overlayEnabled: true,
   overlayQrUrl: "",
-  overlayText: "สแกนทดสอบ MBTI ของคุณ →",
+  overlayText: "สแกนทดสอบ MPTI ของคุณ",
+  overlayText2: "ค้นพบบุคลิกการใช้เงินของคุณ →",
   overlayBarColor: "#1B2FA0",
   // JSONBin — cloud config sync
   jsonbinId: "6a0d553eee5a733b12eb417b",
