@@ -116,7 +116,7 @@ async function buildShareImage(src, { overlayText, overlayQrUrl, logoSrc }) {
   const img = await loadImg(src);
   const W = img.naturalWidth  || img.width;
   const H = img.naturalHeight || img.height;
-  const barH = Math.round(H * 0.11);           // ~11% height — overlay sits ON the image
+  const barH = Math.round(H * 0.07);           // ~7% height — tight to content
   const canvas = document.createElement("canvas");
   canvas.width = W; canvas.height = H;          // same size as original image
   const ctx = canvas.getContext("2d");
@@ -129,45 +129,45 @@ async function buildShareImage(src, { overlayText, overlayQrUrl, logoSrc }) {
   ctx.fillRect(0, H - barH, W, barH);
 
   const barY = H - barH; // top edge of bar
+  const vPad = Math.round(barH * 0.12); // vertical padding inside bar
 
-  // 3. QR code — right side, 68% of bar height
-  const qrSize = Math.round(barH * 0.68);
-  const qrPad  = Math.round((barH - qrSize) / 2);
-  let qrLeftEdge = W - qrPad; // fallback right boundary when no QR
+  // 3. QR code — right side, fits bar height minus padding
+  const qrSize = barH - vPad * 2;
+  const hPad   = Math.round(barH * 0.10);
+  let qrLeftEdge = W - hPad; // fallback right boundary when no QR
   if (overlayQrUrl) {
     try {
       const qrDataUrl = await QRCode.toDataURL(overlayQrUrl, {
         width: qrSize * 2, margin: 1,
-        color: { dark: "#1a1a1a", light: "rgba(0,0,0,0)" }, // transparent bg
+        color: { dark: "#1a1a1a", light: "#EBEBEB" }, // hex only — rgba not supported
       });
       const qrImg = await loadImg(qrDataUrl);
-      qrLeftEdge = W - qrSize - qrPad;
-      ctx.drawImage(qrImg, qrLeftEdge, barY + qrPad, qrSize, qrSize);
+      qrLeftEdge = W - qrSize - hPad;
+      ctx.drawImage(qrImg, qrLeftEdge, barY + vPad, qrSize, qrSize);
     } catch (_) { /* keep fallback */ }
   }
 
-  // 4. Logo — left side, 36% of bar height
-  let logoEndX = 14;
+  // 4. Logo — left side, fits bar height minus padding
+  let logoEndX = hPad;
   if (logoSrc) {
     try {
       const logoImg = await loadImg(logoSrc);
-      const logoH = Math.round(barH * 0.36);
+      const logoH = barH - vPad * 2;
       const logoW = Math.round(logoImg.naturalWidth * (logoH / logoImg.naturalHeight));
-      const logoY = barY + Math.round((barH - logoH) / 2);
-      ctx.drawImage(logoImg, 14, logoY, logoW, logoH);
-      logoEndX = 14 + logoW + 10;
+      ctx.drawImage(logoImg, hPad, barY + vPad, logoW, logoH);
+      logoEndX = hPad + logoW + 8;
     } catch (_) { /* keep fallback */ }
   }
 
   // 5. Center text — auto-shrink font to fit; never squish with maxWidth
-  const textAreaW = qrLeftEdge - logoEndX - 16;
+  const textAreaW = qrLeftEdge - logoEndX - 8;
   const textX     = logoEndX + textAreaW / 2;
   const textY     = barY + barH / 2;
   const text      = overlayText || "";
-  let fontSize = Math.round(barH * 0.22);
+  let fontSize = barH - vPad * 2;             // start at content height
   ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
   // Shrink font until text fits naturally (no distortion)
-  while (fontSize > 10 && ctx.measureText(text).width > textAreaW) {
+  while (fontSize > 8 && ctx.measureText(text).width > textAreaW) {
     fontSize -= 1;
     ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
   }
