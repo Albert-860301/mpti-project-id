@@ -112,56 +112,69 @@ function loadImg(src) {
 }
 
 // Composite personality image + bottom overlay bar → returns blob URL
-async function buildShareImage(src, { overlayText, overlayBarColor, overlayQrUrl, logoSrc }) {
+async function buildShareImage(src, { overlayText, overlayQrUrl, logoSrc }) {
   const img = await loadImg(src);
   const W = img.naturalWidth  || img.width;
   const H = img.naturalHeight || img.height;
-  const barH = Math.round(H * 0.088);          // ~9% height for the bar
+  const barH = Math.round(H * 0.11);           // ~11% height — overlay sits ON the image
   const canvas = document.createElement("canvas");
-  canvas.width = W; canvas.height = H + barH;
+  canvas.width = W; canvas.height = H;          // same size as original image
   const ctx = canvas.getContext("2d");
 
-  // 1. Draw main image
+  // 1. Draw main image at full size
   ctx.drawImage(img, 0, 0, W, H);
 
-  // 2. Draw bottom bar
-  ctx.fillStyle = overlayBarColor || "#1B2FA0";
-  ctx.fillRect(0, H, W, barH);
+  // 2. Semi-transparent light-gray bar overlaid on bottom of image
+  ctx.fillStyle = "rgba(235, 235, 235, 0.72)";
+  ctx.fillRect(0, H - barH, W, barH);
 
-  // 3. QR code (right side)
-  const qrSize = barH - 8;
-  let qrX = W - qrSize - 6;
+  const barY = H - barH; // top edge of bar
+
+  // 3. QR code — right side, 68% of bar height
+  const qrSize = Math.round(barH * 0.68);
+  const qrPad  = Math.round((barH - qrSize) / 2);
+  let qrLeftEdge = W - qrPad; // fallback right boundary when no QR
   if (overlayQrUrl) {
     try {
       const qrDataUrl = await QRCode.toDataURL(overlayQrUrl, {
         width: qrSize * 2, margin: 1,
-        color: { dark: "#FFFFFF", light: overlayBarColor || "#1B2FA0" }
+        color: { dark: "#1a1a1a", light: "rgba(0,0,0,0)" }, // transparent bg
       });
       const qrImg = await loadImg(qrDataUrl);
-      ctx.drawImage(qrImg, qrX, H + 4, qrSize, qrSize);
-    } catch (_) { qrX = W - 6; }
-  } else { qrX = W - 6; }
+      qrLeftEdge = W - qrSize - qrPad;
+      ctx.drawImage(qrImg, qrLeftEdge, barY + qrPad, qrSize, qrSize);
+    } catch (_) { /* keep fallback */ }
+  }
 
-  // 4. Logo (left side)
-  let logoEndX = 12;
+  // 4. Logo — left side, 36% of bar height
+  let logoEndX = 14;
   if (logoSrc) {
     try {
       const logoImg = await loadImg(logoSrc);
-      const logoH = barH * 0.55;
-      const logoW = logoImg.naturalWidth * (logoH / logoImg.naturalHeight);
-      ctx.drawImage(logoImg, 12, H + (barH - logoH) / 2, logoW, logoH);
-      logoEndX = 12 + logoW + 10;
-    } catch (_) { logoEndX = 12; }
+      const logoH = Math.round(barH * 0.36);
+      const logoW = Math.round(logoImg.naturalWidth * (logoH / logoImg.naturalHeight));
+      const logoY = barY + Math.round((barH - logoH) / 2);
+      ctx.drawImage(logoImg, 14, logoY, logoW, logoH);
+      logoEndX = 14 + logoW + 10;
+    } catch (_) { /* keep fallback */ }
   }
 
-  // 5. Center text
-  const textAreaW = qrX - logoEndX - 16;
-  const fontSize = Math.round(barH * 0.28);
-  ctx.font = `bold ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
-  ctx.fillStyle = "#FFFFFF";
+  // 5. Center text — auto-shrink font to fit; never squish with maxWidth
+  const textAreaW = qrLeftEdge - logoEndX - 16;
+  const textX     = logoEndX + textAreaW / 2;
+  const textY     = barY + barH / 2;
+  const text      = overlayText || "";
+  let fontSize = Math.round(barH * 0.22);
+  ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+  // Shrink font until text fits naturally (no distortion)
+  while (fontSize > 10 && ctx.measureText(text).width > textAreaW) {
+    fontSize -= 1;
+    ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+  }
+  ctx.fillStyle = "#1a1a1a";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(overlayText || "", logoEndX + textAreaW / 2, H + barH / 2, textAreaW);
+  ctx.fillText(text, textX, textY);
 
   return new Promise(resolve => canvas.toBlob(b => resolve(URL.createObjectURL(b)), "image/jpeg", 0.92));
 }
@@ -566,7 +579,6 @@ function SharePreview({ result, images, strings, onClose, showLineMode, settings
     const logoSrc = getOverlayLogo() || null;
     buildShareImage(rawSrc, {
       overlayText: settings.overlayText,
-      overlayBarColor: settings.overlayBarColor,
       overlayQrUrl: settings.overlayQrUrl,
       logoSrc,
     }).then(url => { setCompositeSrc(url); setBuilding(false); })
