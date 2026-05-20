@@ -261,9 +261,9 @@ export const DEFAULT_SETTINGS = {
   cloudinaryCloudName: "dglzki3sy",
   cloudinaryUploadPreset: "mpti_upload",
   lineOaUrl: "",
-  // JSONBin — cloud config sync (get free account at jsonbin.io)
-  jsonbinId: "",
-  jsonbinKey: "",
+  // JSONBin — cloud config sync
+  jsonbinId: "6a0d553eee5a733b12eb417b",
+  jsonbinKey: "$2a$10$WdDmvg43kpbqaSAc0NiGyuOi5E8hXZPJGz63DAqGiFzNUGyGMi8OK",
 };
 
 // ─── DEFAULT EQUIV REFERENCES ───────────────────────────────────
