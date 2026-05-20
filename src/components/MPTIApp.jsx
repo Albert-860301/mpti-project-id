@@ -573,7 +573,16 @@ function LoginSheet({ onClose, onSuccess, strings, monthlyWaste, lineOaUrl }) {
 }
 
 /* ── SUCCESS ─────────────────────────────────────────────────── */
-function SuccessModal({ onClose, strings }) {
+function SuccessModal({ onClose, strings, autoRedirect }) {
+  const [countdown, setCountdown] = useState(autoRedirect ? 3 : null);
+
+  useEffect(() => {
+    if (!autoRedirect) return;
+    if (countdown <= 0) { onClose(); return; }
+    const id = setTimeout(() => setCountdown(c => c - 1), 1000);
+    return () => clearTimeout(id);
+  }, [countdown, autoRedirect]);
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={{ position: "fixed", inset: 0, zIndex: 60, display: "grid", placeItems: "center", padding: 12, background: "rgba(15,23,42,.34)", backdropFilter: "blur(12px)" }}>
@@ -590,7 +599,9 @@ function SuccessModal({ onClose, strings }) {
             </div>
           ))}
         </div>
-        <motion.button onClick={onClose} whileTap={{ scale: 0.96 }} style={{ ...primaryBtn(), marginTop: 16 }}>{strings.successCta}</motion.button>
+        <motion.button onClick={onClose} whileTap={{ scale: 0.96 }} style={{ ...primaryBtn(), marginTop: 16 }}>
+          {autoRedirect && countdown > 0 ? `${strings.successCta} (${countdown})` : strings.successCta}
+        </motion.button>
       </motion.div>
     </motion.div>
   );
@@ -648,9 +659,17 @@ function MPTIAppContent() {
 
   const isMobile = useIsMobile();
 
+  const isLineMode = settings.showLoginSheet !== false;
+
   const closeSuccess = () => {
     setShowSuccess(false);
     window.open(settings.redfingerUrl, "_blank");
+  };
+
+  // No-LINE mode: open LINE OA for tracking, then auto-redirect to H5 via countdown
+  const handleClaimNoLine = () => {
+    if (settings.lineOaUrl) window.open(settings.lineOaUrl, "_blank");
+    setShowSuccess(true);
   };
 
   return (
@@ -660,11 +679,11 @@ function MPTIAppContent() {
         {phase === "quiz"   && <QuizScreen questions={questions} questionImages={questionImages} onDone={handleDone} onBack={() => setPhase("start")} isMobile={isMobile} />}
         {phase === "calc"   && <CalcScreen onDone={handleCalc} strings={strings} isMobile={isMobile} result={result} images={images} />}
         {phase === "result" && result && <ResultScreen result={result} equivRefs={equivRefs} onShare={() => { recordShare(); setShowShare(true); }} onPlan={() => setPhase("plan")} onRestart={() => { setResult(null); setPhase("start"); }} strings={strings} isMobile={isMobile} showLineMode={settings.showLoginSheet !== false} />}
-        {phase === "plan"   && result && <PlanScreen result={result} cards={cards} cardImages={cardImages} onBack={() => setPhase("result")} onClaim={() => { if (settings.showLoginSheet !== false) setShowLogin(true); else { if (settings.lineOaUrl) window.open(settings.lineOaUrl, "_blank"); setShowSuccess(true); } }} strings={strings} isMobile={isMobile} />}
+        {phase === "plan"   && result && <PlanScreen result={result} cards={cards} cardImages={cardImages} onBack={() => setPhase("result")} onClaim={() => isLineMode ? setShowLogin(true) : handleClaimNoLine()} strings={strings} isMobile={isMobile} />}
       </AnimatePresence>
       <AnimatePresence>{showShare && result && <SharePreview result={result} images={images} strings={strings} onClose={() => setShowShare(false)} showLineMode={settings.showLoginSheet !== false} />}</AnimatePresence>
       <AnimatePresence>{showLogin && <LoginSheet onClose={() => setShowLogin(false)} onSuccess={() => { setShowLogin(false); setShowSuccess(true); }} strings={strings} monthlyWaste={result?.monthlyWaste} lineOaUrl={settings.lineOaUrl} />}</AnimatePresence>
-      <AnimatePresence>{showSuccess && <SuccessModal onClose={closeSuccess} strings={strings} />}</AnimatePresence>
+      <AnimatePresence>{showSuccess && <SuccessModal onClose={closeSuccess} strings={strings} autoRedirect={!isLineMode} />}</AnimatePresence>
     </Shell>
   );
 }
