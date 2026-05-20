@@ -356,6 +356,7 @@ const KEYS = {
   recovery:       "mpti-recovery",
   users:          "mpti-users",
   images:         "mpti-images",
+  imagesRaw:      "mpti-images-raw",   // original (pre-overlay) URLs for re-baking
   questionImages: "mpti-question-images",
   coverImage:     "mpti-cover-image",
   coverContent:   "mpti-cover-content",
@@ -474,6 +475,14 @@ export function removeImage(typeKey) {
   const imgs = getImages();
   delete imgs[typeKey];
   writeJSON(KEYS.images, imgs);
+}
+
+// Raw (pre-overlay) type image URLs — admin only, used for re-baking
+export function getImagesRaw() { return readJSON(KEYS.imagesRaw, {}); }
+export function saveImageRaw(typeKey, url) {
+  const imgs = getImagesRaw();
+  imgs[typeKey] = url;
+  return writeJSON(KEYS.imagesRaw, imgs);
 }
 
 // Question images
@@ -599,8 +608,18 @@ export function recordShare() {
 
 // ─── SERVER SYNC (text config only — images already in public/) ──
 function collectTextData() {
+  // Strip base64 overlay logo from images object before syncing
+  // (it can be several hundred KB and would bloat the JSONBin payload)
+  const rawImgs = readJSON(KEYS.images, null);
+  let imagesForSync = null;
+  if (rawImgs) {
+    imagesForSync = { ...rawImgs };
+    delete imagesForSync.__overlay_logo__;
+  }
+
   return {
     coverContent:  readJSON(KEYS.coverContent,  null),
+    coverImage:    (() => { try { return localStorage.getItem(KEYS.coverImage) || null; } catch { return null; } })(),
     strings:       readJSON(KEYS.strings,       null),
     settings:      readJSON(KEYS.settings,      null),
     questions:     readJSON(KEYS.questions,     null),
@@ -609,8 +628,8 @@ function collectTextData() {
     scoring:       readJSON(KEYS.scoring,       null),
     comboMap:      readJSON(KEYS.comboMap,      null),
     equivRefs:     readJSON(KEYS.equivRefs,     null),
-    // image URL paths (small strings, already served from public/)
-    images:        readJSON(KEYS.images,        null),
+    // image URL paths (Cloudinary short strings — no base64)
+    images:        imagesForSync,
     questionImages:readJSON(KEYS.questionImages,null),
     cardImages:    readJSON(KEYS.cardImages,    null),
   };
@@ -618,6 +637,9 @@ function collectTextData() {
 
 function applyServerData(d) {
   if (d.coverContent)   writeJSON(KEYS.coverContent,   d.coverContent);
+  if (d.coverImage != null) {
+    try { localStorage.setItem(KEYS.coverImage, d.coverImage); } catch { /* ignore */ }
+  }
   if (d.strings)        writeJSON(KEYS.strings,        d.strings);
   if (d.settings)       writeJSON(KEYS.settings,       d.settings);
   if (d.questions)      writeJSON(KEYS.questions,      d.questions);

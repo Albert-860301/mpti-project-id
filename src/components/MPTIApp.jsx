@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import QRCode from "qrcode";
 import {
   getQuestions, getTypes, getRecoveryCards, getStats, getImages,
   getQuestionImages, getCoverImage, getCoverContent,
   getSettings, getStrings, getEquivRefs, calcEquivLabel,
-  getCardImages, getOverlayLogo, loadFromServer,
+  getCardImages, loadFromServer,
   calculateResult, recordTest, recordShare,
 } from "../data/store";
 
@@ -100,82 +99,7 @@ function preloadImages(srcs) {
   srcs.forEach(src => { if (src) { const img = new Image(); img.src = src; } });
 }
 
-// Load an image element (handles cross-origin)
-function loadImg(src) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
-  });
-}
-
-// Composite personality image + bottom overlay bar → returns blob URL
-async function buildShareImage(src, { overlayText, overlayQrUrl, logoSrc }) {
-  const img = await loadImg(src);
-  const W = img.naturalWidth  || img.width;
-  const H = img.naturalHeight || img.height;
-  const barH = Math.round(H * 0.07);           // ~7% height — tight to content
-  const canvas = document.createElement("canvas");
-  canvas.width = W; canvas.height = H;          // same size as original image
-  const ctx = canvas.getContext("2d");
-
-  // 1. Draw main image at full size
-  ctx.drawImage(img, 0, 0, W, H);
-
-  // 2. Logo — top-left corner, small (5% of image width)
-  if (logoSrc) {
-    try {
-      const logoImg = await loadImg(logoSrc);
-      const logoH = Math.round(W * 0.07);
-      const logoW = Math.round(logoImg.naturalWidth * (logoH / logoImg.naturalHeight));
-      const logoPad = Math.round(W * 0.03);
-      ctx.drawImage(logoImg, logoPad, logoPad, logoW, logoH);
-    } catch (_) { /* skip logo if load fails */ }
-  }
-
-  // 3. Bottom bar — text + QR only (no logo), semi-transparent light gray
-  ctx.fillStyle = "rgba(235, 235, 235, 0.72)";
-  ctx.fillRect(0, H - barH, W, barH);
-
-  const barY = H - barH;
-  const vPad = Math.round(barH * 0.12);
-  const hPad = Math.round(barH * 0.10);
-
-  // QR code — right side
-  const qrSize = barH - vPad * 2;
-  let qrLeftEdge = W - hPad;
-  if (overlayQrUrl) {
-    try {
-      const qrDataUrl = await QRCode.toDataURL(overlayQrUrl, {
-        width: qrSize * 2, margin: 1,
-        color: { dark: "#1a1a1a", light: "#EBEBEB" },
-      });
-      const qrImg = await loadImg(qrDataUrl);
-      qrLeftEdge = W - qrSize - hPad;
-      ctx.drawImage(qrImg, qrLeftEdge, barY + vPad, qrSize, qrSize);
-    } catch (_) { /* keep fallback */ }
-  }
-
-  // Text — fills the bar from left to just before QR
-  const textAreaW = qrLeftEdge - hPad - 8;
-  const textX     = hPad + textAreaW / 2;
-  const textY     = barY + barH / 2;
-  const text      = overlayText || "";
-  let fontSize = barH - vPad * 2;
-  ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
-  while (fontSize > 8 && ctx.measureText(text).width > textAreaW) {
-    fontSize -= 1;
-    ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
-  }
-  ctx.fillStyle = "#1a1a1a";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(text, textX, textY);
-
-  return new Promise(resolve => canvas.toBlob(b => resolve(URL.createObjectURL(b)), "image/jpeg", 0.92));
-}
+// (Overlay compositing has been moved to admin — images come pre-baked from Cloudinary)
 
 /* ── START ───────────────────────────────────────────────────── */
 function StartScreen({ onStart, stats, fakeCount, coverImage, coverContent, settings, isMobile, types, images }) {
@@ -563,33 +487,18 @@ function PlanScreen({ result, cards, cardImages, onBack, onClaim, strings, isMob
 }
 
 /* ── SHARE PREVIEW ──────────────────────────────────────────── */
-function SharePreview({ result, images, strings, onClose, showLineMode, settings }) {
+// Overlay is pre-baked into images by admin — no client-side canvas needed.
+// Mobile long-press saves the image directly (no blob URL blocking).
+function SharePreview({ result, images, strings, onClose, showLineMode }) {
   const { personality: p, typeKey } = result;
-  const rawSrc = imgSrc(images[typeKey], `/images/types/${typeKey}.jpg`);
-  const [compositeSrc, setCompositeSrc] = useState(null);
-  const [building, setBuilding] = useState(false);
+  const src = imgSrc(images[typeKey], `/images/types/${typeKey}.jpg`);
   const isTouch = navigator.maxTouchPoints > 0;
-
-  // Build composited image on mount
-  useEffect(() => {
-    if (!settings?.overlayEnabled) { setCompositeSrc(rawSrc); return; }
-    setBuilding(true);
-    const logoSrc = getOverlayLogo() || null;
-    buildShareImage(rawSrc, {
-      overlayText: settings.overlayText,
-      overlayQrUrl: settings.overlayQrUrl,
-      logoSrc,
-    }).then(url => { setCompositeSrc(url); setBuilding(false); })
-      .catch(() => { setCompositeSrc(rawSrc); setBuilding(false); });
-  }, []);
-
-  const displaySrc = compositeSrc || rawSrc;
   const [status, setStatus] = useState("idle");
 
   const handleCopy = async () => {
     setStatus("loading");
     try {
-      const res = await fetch(displaySrc);
+      const res = await fetch(src);
       const blob = await res.blob();
       await navigator.clipboard.write([new ClipboardItem({ [blob.type || "image/jpeg"]: blob })]);
       setStatus("done");
@@ -610,16 +519,10 @@ function SharePreview({ result, images, strings, onClose, showLineMode, settings
       style={{ position: "fixed", inset: 0, zIndex: 50, display: "grid", placeItems: "center", padding: 16, background: "rgba(15,23,42,.36)", backdropFilter: "blur(10px)" }}>
       <motion.div onClick={e => e.stopPropagation()} initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
         style={{ width: "100%", maxWidth: 360, borderRadius: 24, overflow: "hidden", background: C.phone, boxShadow: "0 24px 70px rgba(15,23,42,.25)" }}>
-        <div style={{ overflow: "hidden", position: "relative", background: C.card2, minHeight: 200 }}>
-          {building && (
-            <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", zIndex: 2 }}>
-              <div style={{ width: 32, height: 32, borderRadius: 99, border: `3px solid ${C.line}`, borderTopColor: C.red, animation: "spin 0.8s linear infinite" }} />
-              <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-            </div>
-          )}
-          <img src={displaySrc} alt={p.name} onError={hideOnErr} decoding="async"
-            style={{ width: "100%", height: "auto", display: "block", opacity: building ? 0.3 : 1, transition: "opacity .3s" }} />
-          {isTouch && !building && (
+        <div style={{ overflow: "hidden", position: "relative", background: C.card2 }}>
+          <img src={src} alt={p.name} onError={hideOnErr} decoding="async"
+            style={{ width: "100%", height: "auto", display: "block" }} />
+          {isTouch && (
             <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "10px 14px", background: "rgba(15,23,42,.62)", backdropFilter: "blur(4px)", textAlign: "center" }}>
               <div style={{ color: "#fff", fontSize: 13, fontWeight: 800 }}>{longPressHint}</div>
             </div>
@@ -630,7 +533,7 @@ function SharePreview({ result, images, strings, onClose, showLineMode, settings
           {isTouch ? (
             <button onClick={onClose} style={modalBtn(C.green, "#fff")}>OK</button>
           ) : (
-            <button onClick={handleCopy} disabled={status !== "idle" || building} style={modalBtn(status === "done" ? "#06C755" : C.green, "#fff")}>
+            <button onClick={handleCopy} disabled={status !== "idle"} style={modalBtn(status === "done" ? "#06C755" : C.green, "#fff")}>
               {copyLabel}
             </button>
           )}
@@ -782,7 +685,7 @@ function MPTIAppContent() {
         {phase === "result" && result && <ResultScreen result={result} equivRefs={equivRefs} onShare={() => { recordShare(); setShowShare(true); }} onPlan={() => setPhase("plan")} onRestart={() => { setResult(null); setPhase("start"); }} strings={strings} isMobile={isMobile} showLineMode={settings.showLoginSheet !== false} />}
         {phase === "plan"   && result && <PlanScreen result={result} cards={cards} cardImages={cardImages} onBack={() => setPhase("result")} onClaim={() => isLineMode ? setShowLogin(true) : handleClaimNoLine()} strings={strings} isMobile={isMobile} />}
       </AnimatePresence>
-      <AnimatePresence>{showShare && result && <SharePreview result={result} images={images} strings={strings} onClose={() => setShowShare(false)} showLineMode={settings.showLoginSheet !== false} settings={settings} />}</AnimatePresence>
+      <AnimatePresence>{showShare && result && <SharePreview result={result} images={images} strings={strings} onClose={() => setShowShare(false)} showLineMode={settings.showLoginSheet !== false} />}</AnimatePresence>
       <AnimatePresence>{showLogin && <LoginSheet onClose={() => setShowLogin(false)} onSuccess={() => { setShowLogin(false); setShowSuccess(true); }} strings={strings} monthlyWaste={result?.monthlyWaste} lineOaUrl={settings.lineOaUrl} />}</AnimatePresence>
       <AnimatePresence>{showSuccess && <SuccessModal onClose={closeSuccess} strings={strings} autoRedirect={!isLineMode} />}</AnimatePresence>
     </Shell>

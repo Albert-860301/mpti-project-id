@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import QRCode from "qrcode";
 import {
   DEFAULT_QUESTIONS, DEFAULT_TYPES, DEFAULT_RECOVERY_CARDS,
   DEFAULT_COVER_CONTENT, DEFAULT_SCORING, DEFAULT_COMBO_MAP,
@@ -9,6 +10,7 @@ import {
   getRecoveryCards, saveRecoveryCards,
   getUsers, clearUsers,
   getImages, saveImage, removeImage,
+  getImagesRaw, saveImageRaw,
   getQuestionImages, saveQuestionImage, removeQuestionImage,
   getCoverImage, saveCoverImage, removeCoverImage,
   getCoverContent, saveCoverContent, resetCoverContent,
@@ -124,6 +126,105 @@ async function saveImageToDisk(folder, filename, dataUrl) {
     const data = await res.json();
     return data.ok ? data.url : null;
   } catch { return null; }
+}
+
+/* ─── OVERLAY COMPOSITING ────────────────────────────────────────────
+   Runs in the admin browser — no CORS issues, no mobile tainting.
+   The baked Cloudinary URL is then synced to all frontend users.     */
+function loadImgAdmin(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+async function buildShareImageAdmin(src, { overlayText, overlayQrUrl, logoSrc }) {
+  const img = await loadImgAdmin(src);
+  const W = img.naturalWidth  || img.width;
+  const H = img.naturalHeight || img.height;
+  const barH = Math.round(H * 0.07);
+  const canvas = document.createElement("canvas");
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, W, H);
+
+  // Logo — top-left, small
+  if (logoSrc) {
+    try {
+      const logoImg = await loadImgAdmin(logoSrc);
+      const logoH = Math.round(W * 0.07);
+      const logoW = Math.round(logoImg.naturalWidth * (logoH / logoImg.naturalHeight));
+      const pad   = Math.round(W * 0.03);
+      ctx.drawImage(logoImg, pad, pad, logoW, logoH);
+    } catch (_) {}
+  }
+
+  // Bottom bar — light gray semi-transparent
+  ctx.fillStyle = "rgba(235, 235, 235, 0.72)";
+  ctx.fillRect(0, H - barH, W, barH);
+  const barY = H - barH;
+  const vPad = Math.round(barH * 0.12);
+  const hPad = Math.round(barH * 0.10);
+
+  // QR code — right side
+  const qrSize = barH - vPad * 2;
+  let qrLeftEdge = W - hPad;
+  if (overlayQrUrl) {
+    try {
+      const qrDataUrl = await QRCode.toDataURL(overlayQrUrl, {
+        width: qrSize * 2, margin: 1,
+        color: { dark: "#1a1a1a", light: "#EBEBEB" },
+      });
+      const qrImg = await loadImgAdmin(qrDataUrl);
+      qrLeftEdge = W - qrSize - hPad;
+      ctx.drawImage(qrImg, qrLeftEdge, barY + vPad, qrSize, qrSize);
+    } catch (_) {}
+  }
+
+  // Text — left of QR, auto-shrink font
+  const textAreaW = qrLeftEdge - hPad - 8;
+  const textX     = hPad + textAreaW / 2;
+  const textY     = barY + barH / 2;
+  const text      = overlayText || "";
+  let fontSize = barH - vPad * 2;
+  ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+  while (fontSize > 8 && ctx.measureText(text).width > textAreaW) {
+    fontSize -= 1;
+    ctx.font = `600 ${fontSize}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+  }
+  ctx.fillStyle = "#1a1a1a";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, textX, textY);
+
+  return new Promise(resolve => canvas.toBlob(b => resolve(URL.createObjectURL(b)), "image/jpeg", 0.92));
+}
+
+// Convert a blob URL → data URL so it can be re-uploaded to Cloudinary
+async function blobUrlToDataUrl(blobUrl) {
+  const res  = await fetch(blobUrl);
+  const blob = await res.blob();
+  URL.revokeObjectURL(blobUrl);
+  return new Promise(resolve => {
+    const fr = new FileReader();
+    fr.onload = () => resolve(fr.result);
+    fr.readAsDataURL(blob);
+  });
+}
+
+// Bake overlay into one image and upload to Cloudinary; returns new URL or null
+async function bakeAndUpload(key, rawUrl, settings) {
+  const logoSrc = getOverlayLogo() || null;
+  const blobUrl = await buildShareImageAdmin(rawUrl, {
+    overlayText:  settings.overlayText,
+    overlayQrUrl: settings.overlayQrUrl,
+    logoSrc,
+  });
+  const dataUrl = await blobUrlToDataUrl(blobUrl);
+  return saveImageToDisk("types", `${key}_baked.jpg`, dataUrl);
 }
 
 /* ─── LOGIN ──────────────────────────────────────────────────────── */
@@ -250,7 +351,7 @@ function CoverEditor() {
       const toStore = diskUrl || compressed;
       const ok = saveCoverImage(toStore);
       if (!ok) alert("❌ 储存失败：浏览器储存空间不足，请先删除其他图片再试。");
-      else setCoverImage(toStore);
+      else { setCoverImage(toStore); syncToServer(); }
     };
     reader.readAsDataURL(file); e.target.value = "";
   };
@@ -616,19 +717,39 @@ function ImageManager() {
   const types = getTypes();
   const fileRef = useRef(null);
   const [uploading, setUploading] = useState(null);
+  const [status, setStatus] = useState("");
 
   const handleUpload = key => { setUploading(key); fileRef.current?.click(); };
   const onFile = e => {
     const file = e.target.files?.[0]; if (!file || !uploading) return;
+    const key = uploading;
     const reader = new FileReader();
     reader.onload = async ev => {
+      setStatus(`上传 ${key}…`);
       const compressed = await compressImg(ev.target.result, 540, 960, 0.82);
-      const diskUrl = await saveImageToDisk("types", `${uploading}.jpg`, compressed);
-      const toStore = diskUrl || compressed;
-      const ok = saveImage(uploading, toStore);
+      const rawDiskUrl = await saveImageToDisk("types", `${key}.jpg`, compressed);
+      const rawUrl = rawDiskUrl || compressed;
+
+      // Always persist the original (pre-overlay) URL for future re-baking
+      saveImageRaw(key, rawUrl);
+
+      // Auto-bake overlay if fully configured
+      let finalUrl = rawUrl;
+      const settings = getSettings();
+      if (settings.overlayEnabled && settings.overlayQrUrl) {
+        setStatus(`合成 ${key}…`);
+        try {
+          const bakedUrl = await bakeAndUpload(key, rawUrl, settings);
+          if (bakedUrl) finalUrl = bakedUrl;
+        } catch (_) { /* fall back to raw */ }
+      }
+
+      const ok = saveImage(key, finalUrl);
       if (!ok) alert("❌ 储存失败：浏览器储存空间不足，请先删除其他图片再试。");
-      else setImages({ ...images, [uploading]: toStore });
+      else setImages(prev => ({ ...prev, [key]: finalUrl }));
       setUploading(null);
+      setStatus("");
+      syncToServer(); // push image URL mapping to JSONBin
     };
     reader.readAsDataURL(file); e.target.value = "";
   };
@@ -640,8 +761,9 @@ function ImageManager() {
   return (
     <div>
       <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 4 }}>🖼 Image Manager</h2>
-      <p style={{ color: S.muted, fontSize: 13, marginBottom: 4 }}>为每种人格类型上传海报图片。</p>
+      <p style={{ color: S.muted, fontSize: 13, marginBottom: 4 }}>为每种人格类型上传海报图片。如果后台已配置 Overlay，上传时会自动合成。</p>
       <div style={{ marginBottom: 16 }}><SizeHint text="实际储存尺寸：540×960px（9:16 竖版海报）" /></div>
+      {status && <div style={{ padding: "8px 14px", background: "#EFF6FF", borderRadius: 8, fontSize: 12, fontWeight: 700, color: S.blue, marginBottom: 12 }}>⏳ {status}</div>}
       <input ref={fileRef} type="file" accept="image/*" onChange={onFile} style={{ display: "none" }} />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(180px,1fr))", gap: 12 }}>
         {Object.entries(types).map(([key, t]) => {
@@ -698,6 +820,7 @@ function CardsEditor() {
       const url = diskUrl || compressed;
       saveCardImage(no, url);
       setCardImgs(prev => ({ ...prev, [no]: url }));
+      syncToServer(); // push card image URL to JSONBin
     };
     reader.readAsDataURL(file);
     e.target.value = "";
@@ -1023,6 +1146,8 @@ function StringsEditor() {
 function OverlaySettings({ settings, upSetting }) {
   const logoRef = useRef();
   const [logo, setLogo] = useState(() => getOverlayLogo());
+  const [rebaking, setRebaking] = useState(false);
+  const [rebakeLog, setRebakeLog] = useState([]);
 
   const handleLogoUpload = e => {
     const file = e.target.files[0]; if (!file) return;
@@ -1035,10 +1160,46 @@ function OverlaySettings({ settings, upSetting }) {
     reader.readAsDataURL(file);
   };
 
+  const reBakeAll = async () => {
+    if (!settings.overlayEnabled) { alert("请先开启 Overlay"); return; }
+    if (!settings.overlayQrUrl)   { alert("请先填写二维码 URL 并保存 Settings"); return; }
+    setRebaking(true);
+    setRebakeLog([]);
+    const log = [];
+    const push = msg => { log.push(msg); setRebakeLog([...log]); };
+
+    const images    = getImages();
+    const rawImages = getImagesRaw();
+    const settingsNow = getSettings(); // re-read to get latest saved settings
+
+    for (const [key, url] of Object.entries(images)) {
+      if (!url || key === "__overlay_logo__") continue;
+      const srcUrl = rawImages[key] || url; // prefer stored raw; fall back to current
+      push(`合成 ${key}…`);
+      try {
+        const bakedUrl = await bakeAndUpload(key, srcUrl, settingsNow);
+        if (bakedUrl) {
+          saveImageRaw(key, srcUrl);  // preserve original for future re-bakes
+          saveImage(key, bakedUrl);
+          push(`✓ ${key}`);
+        } else {
+          push(`✗ ${key}：上传失败`);
+        }
+      } catch (err) {
+        push(`✗ ${key}：${err.message || "合成失败"}`);
+      }
+    }
+
+    await syncToServer();
+    push("✅ 全部完成！前端刷新后即可看到新图片。");
+    setRebaking(false);
+  };
+
   return (
     <div style={{ display: "grid", gap: 12 }}>
       <p style={{ fontSize: 12, color: S.muted, margin: 0 }}>
-        在分享图底部压上固定 bar：Logo + 引导文字 + 二维码。用户长按保存的图片里会包含这条 bar。
+        在分享图底部压上固定 bar（文字 + 二维码）+ 左上角 Logo。<br />
+        改完设置后点「合成到所有图片」即可更新，前端用户无需任何操作。
       </p>
       <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
         <input type="checkbox" checked={settings.overlayEnabled !== false}
@@ -1082,6 +1243,28 @@ function OverlaySettings({ settings, upSetting }) {
           </div>
           <p style={{ fontSize: 10, color: S.muted, marginTop: 4 }}>推荐白色透明 PNG，高度约 40px</p>
         </div>
+
+        {/* Re-bake button */}
+        <div style={{ borderTop: `1px solid ${S.border}`, paddingTop: 12 }}>
+          <p style={{ fontSize: 11, color: S.muted, margin: "0 0 8px" }}>
+            设置完毕后，点击下方按钮将 Overlay 合成到所有人格图片中并上传 Cloudinary。
+            前端用户无需任何操作，刷新后立即看到更新。
+          </p>
+          <button
+            onClick={reBakeAll}
+            disabled={rebaking}
+            style={{ ...btn(rebaking ? "#94A3B8" : S.blue), fontSize: 13 }}
+          >
+            {rebaking ? "⏳ 合成中…" : "🖼 合成到所有图片"}
+          </button>
+          {rebakeLog.length > 0 && (
+            <div style={{ marginTop: 10, padding: "10px 12px", background: "#0F172A", borderRadius: 10, maxHeight: 200, overflowY: "auto" }}>
+              {rebakeLog.map((line, i) => (
+                <div key={i} style={{ fontSize: 11, fontFamily: "monospace", color: line.startsWith("✓") ? "#4ADE80" : line.startsWith("✗") ? "#F87171" : line.startsWith("✅") ? "#4ADE80" : "#94A3B8", marginBottom: 2 }}>{line}</div>
+              ))}
+            </div>
+          )}
+        </div>
       </>)}
     </div>
   );
@@ -1101,6 +1284,7 @@ function SettingsEditor() {
     }
     setPwErr("");
     saveSettings(settings);
+    syncToServer(); // ← push settings to JSONBin so frontend sees changes
     setSaved(true); setTimeout(() => setSaved(false), 2000);
   };
   const reset = () => { if (confirm("Reset settings to defaults?")) { resetSettings(); setSettings(DEFAULT_SETTINGS); setPwConfirm(""); } };
