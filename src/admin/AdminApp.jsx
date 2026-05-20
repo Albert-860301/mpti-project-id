@@ -1324,9 +1324,15 @@ function OverlaySettings({ settings, upSetting, onImagesUpdated }) {
     const rawImages = getImagesRaw();
     const settingsNow = getSettings(); // re-read to get latest saved settings
 
+    let skipped = 0;
     for (const [key, url] of Object.entries(images)) {
       if (!url || key === "__overlay_logo__") continue;
-      const srcUrl = rawImages[key] || url; // prefer stored raw; fall back to current
+      const srcUrl = rawImages[key]; // ONLY use raw original — never re-bake from baked
+      if (!srcUrl) {
+        push(`⚠ 跳过 ${key}：缺少原图，请先在 Images 重新上传`);
+        skipped++;
+        continue;
+      }
       push(`合成 ${key}…`);
       try {
         const bakedUrl = await bakeAndUpload(key, srcUrl, settingsNow);
@@ -1343,7 +1349,8 @@ function OverlaySettings({ settings, upSetting, onImagesUpdated }) {
     }
 
     await syncToServer();
-    push("✅ 全部完成！前端刷新后即可看到新图片。");
+    if (skipped > 0) push(`⚠️ ${skipped} 张图片因缺少原图被跳过，请先在 Images 上传原图`);
+    push("✅ 完成！前端刷新后即可看到新图片。");
     setRebaking(false);
     if (onImagesUpdated) onImagesUpdated();  // refresh ImageManager to show latest
   };
