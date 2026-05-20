@@ -1107,6 +1107,20 @@ function SettingsEditor() {
         </div>
       ))}
 
+      {sectionCard("🔒 LINE 登录弹窗", (
+        <div style={{ display: "grid", gap: 10 }}>
+          <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}>
+            <input type="checkbox" checked={settings.showLoginSheet !== false} onChange={e => upSetting("showLoginSheet", e.target.checked)}
+              style={{ width: 18, height: 18, cursor: "pointer" }} />
+            <span style={{ fontSize: 13, fontWeight: 700, color: S.text }}>显示 LINE 登录弹窗</span>
+          </label>
+          <p style={{ fontSize: 11, color: S.muted, margin: 0 }}>
+            开启：点击方案卡片按钮 → 弹出 LINE 登录引导弹窗 → 跳转 LINE OA<br />
+            关闭：点击方案卡片按钮 → 直接跳转 LINE OA + 显示成功弹窗
+          </p>
+        </div>
+      ))}
+
       {sectionCard("💚 LINE Official Account URL", (
         <div style={{ display: "grid", gap: 8 }}>
           <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>点击「LINE 登录」按钮跳转的加好友链接</label>

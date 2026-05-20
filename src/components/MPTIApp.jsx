@@ -656,7 +656,7 @@ function MPTIAppContent() {
         {phase === "quiz"   && <QuizScreen questions={questions} questionImages={questionImages} onDone={handleDone} onBack={() => setPhase("start")} isMobile={isMobile} />}
         {phase === "calc"   && <CalcScreen onDone={handleCalc} strings={strings} isMobile={isMobile} result={result} images={images} />}
         {phase === "result" && result && <ResultScreen result={result} equivRefs={equivRefs} onShare={() => { recordShare(); setShowShare(true); }} onPlan={() => setPhase("plan")} onRestart={() => { setResult(null); setPhase("start"); }} strings={strings} isMobile={isMobile} />}
-        {phase === "plan"   && result && <PlanScreen result={result} cards={cards} cardImages={cardImages} onBack={() => setPhase("result")} onClaim={() => setShowLogin(true)} strings={strings} isMobile={isMobile} />}
+        {phase === "plan"   && result && <PlanScreen result={result} cards={cards} cardImages={cardImages} onBack={() => setPhase("result")} onClaim={() => { if (settings.showLoginSheet !== false) setShowLogin(true); else { if (settings.lineOaUrl) window.open(settings.lineOaUrl, "_blank"); setShowSuccess(true); } }} strings={strings} isMobile={isMobile} />}
       </AnimatePresence>
       <AnimatePresence>{showShare && result && <SharePreview result={result} images={images} strings={strings} onClose={() => setShowShare(false)} />}</AnimatePresence>
       <AnimatePresence>{showLogin && <LoginSheet onClose={() => setShowLogin(false)} onSuccess={() => { setShowLogin(false); setShowSuccess(true); }} strings={strings} monthlyWaste={result?.monthlyWaste} lineOaUrl={settings.lineOaUrl} />}</AnimatePresence>
