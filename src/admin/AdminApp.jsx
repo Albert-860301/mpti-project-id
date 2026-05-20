@@ -1207,20 +1207,10 @@ function OverlaySettings({ settings, upSetting }) {
         <span style={{ fontSize: 13, fontWeight: 700, color: S.text }}>启用底栏 Overlay</span>
       </label>
       {settings.overlayEnabled !== false && (<>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-          <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>引导文字</label>
-            <input value={settings.overlayText || ""} onChange={e => upSetting("overlayText", e.target.value)} style={inputStyle()} />
-          </div>
-          <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>底栏颜色</label>
-            <div style={{ display: "flex", gap: 6, alignItems: "center", marginTop: 4 }}>
-              <input type="color" value={settings.overlayBarColor || "#1B2FA0"}
-                onChange={e => upSetting("overlayBarColor", e.target.value)}
-                style={{ width: 40, height: 36, border: "none", borderRadius: 6, cursor: "pointer", padding: 2 }} />
-              <input value={settings.overlayBarColor || "#1B2FA0"} onChange={e => upSetting("overlayBarColor", e.target.value)} style={{ ...inputStyle(), flex: 1 }} />
-            </div>
-          </div>
+        <div>
+          <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>引导文字</label>
+          <input value={settings.overlayText || ""} onChange={e => upSetting("overlayText", e.target.value)} style={inputStyle()} />
+          <p style={{ fontSize: 10, color: S.muted, marginTop: 4 }}>底栏背景为半透明浅灰色（固定），文字为深色。</p>
         </div>
         <div>
           <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>二维码 URL（扫码跳转的链接）</label>
