@@ -1315,6 +1315,10 @@ function OverlaySettings({ settings, upSetting, onImagesUpdated }) {
   const reBakeAll = async () => {
     if (!settings.overlayEnabled) { alert("请先开启 Overlay"); return; }
     if (!settings.overlayQrUrl)   { alert("请先填写二维码 URL 并保存 Settings"); return; }
+
+    // Save current settings first so bake uses exactly what's on screen
+    saveSettings(settings);
+
     setRebaking(true);
     setRebakeLog([]);
     const log = [];
@@ -1322,7 +1326,9 @@ function OverlaySettings({ settings, upSetting, onImagesUpdated }) {
 
     const images    = getImages();
     const rawImages = getImagesRaw();
-    const settingsNow = getSettings(); // re-read to get latest saved settings
+    const settingsNow = getSettings();
+
+    push(`使用设置: text1="${settingsNow.overlayText}", text2="${settingsNow.overlayText2}", qr="${settingsNow.overlayQrUrl}"`);
 
     let skipped = 0;
     for (const [key, url] of Object.entries(images)) {
@@ -1333,7 +1339,8 @@ function OverlaySettings({ settings, upSetting, onImagesUpdated }) {
         skipped++;
         continue;
       }
-      push(`合成 ${key}…`);
+      const isBaked = srcUrl.includes("_baked");
+      push(`合成 ${key}… (源: ${isBaked ? "⚠️旧合成图!" : "✓原图"} ${srcUrl.slice(-40)})`);
       try {
         const bakedUrl = await bakeAndUpload(key, srcUrl, settingsNow);
         if (bakedUrl) {
