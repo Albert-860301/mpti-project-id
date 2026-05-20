@@ -106,12 +106,7 @@ function StartScreen({ onStart, stats, fakeCount, coverImage, coverContent, sett
   const threshold = settings.fakeCountThreshold ?? 13324;
   const displayCount = stats.total >= threshold ? stats.total : fakeCount;
 
-  // While user reads the start screen, silently preload all 16 type images in background
-  useEffect(() => {
-    const srcs = Object.keys(types || {}).map(k => imgSrc(images?.[k], `/images/types/${k}.jpg`));
-    const id = setTimeout(() => preloadImages(srcs), 800); // slight delay to not compete with cover
-    return () => clearTimeout(id);
-  }, []);
+  // No background preloading on start — first-time visitors should not download images they haven't earned yet
   return (
     <Screen name="start" isMobile={isMobile}>
       <PhoneShell isMobile={isMobile}>
@@ -169,13 +164,13 @@ function QuizScreen({ questions, questionImages, onDone, onBack, isMobile }) {
   const isOpen = q.type === "open-amount";
   const progress = ((index + 1) / questions.length) * 100;
 
-  // Preload all question images on mount (each ~35-44KB, total ~700KB)
+  // Preload next question's image so transition is instant
   useEffect(() => {
-    questions.forEach(q => {
-      const src = questionImages?.[String(q.id)] || `/images/questions/q${q.id}.jpg`;
-      const img = new Image(); img.src = src;
-    });
-  }, []);
+    const next = questions[index + 1];
+    if (!next) return;
+    const src = questionImages?.[String(next.id)] || `/images/questions/q${next.id}.jpg`;
+    const img = new Image(); img.src = src;
+  }, [index]);
 
   // Reset open input when question changes
   useEffect(() => { setOpenInput(""); }, [q.id]);
