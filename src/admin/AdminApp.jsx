@@ -222,12 +222,12 @@ async function buildShareImageAdmin(src, { overlayText, overlayText2, overlayQrU
   const maxFs2 = Math.round(barH * 0.24);
 
   let fs1 = maxFs1;
-  ctx.font = `500 ${fs1}px 'Kanit', 'Noto Sans Thai', sans-serif`;
-  while (fs1 > 6 && ctx.measureText(line1).width > textAreaW) { fs1--; ctx.font = `500 ${fs1}px 'Kanit', 'Noto Sans Thai', sans-serif`; }
+  ctx.font = `500 ${fs1}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+  while (fs1 > 6 && ctx.measureText(line1).width > textAreaW) { fs1--; ctx.font = `500 ${fs1}px 'Plus Jakarta Sans', system-ui, sans-serif`; }
 
   let fs2 = maxFs2;
-  ctx.font = `400 ${fs2}px 'Kanit', 'Noto Sans Thai', sans-serif`;
-  while (fs2 > 5 && ctx.measureText(line2).width > textAreaW) { fs2--; ctx.font = `400 ${fs2}px 'Kanit', 'Noto Sans Thai', sans-serif`; }
+  ctx.font = `400 ${fs2}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+  while (fs2 > 5 && ctx.measureText(line2).width > textAreaW) { fs2--; ctx.font = `400 ${fs2}px 'Plus Jakarta Sans', system-ui, sans-serif`; }
 
   ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
@@ -237,15 +237,15 @@ async function buildShareImageAdmin(src, { overlayText, overlayText2, overlayQrU
     const blockH  = fs1 + lineGap + fs2;
     const startY  = barY + Math.round((barH - blockH) / 2);
 
-    ctx.font = `500 ${fs1}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+    ctx.font = `500 ${fs1}px 'Plus Jakarta Sans', system-ui, sans-serif`;
     ctx.fillStyle = "#ffffff";
     ctx.fillText(line1, textCX, startY + fs1 / 2);
 
-    ctx.font = `400 ${fs2}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+    ctx.font = `400 ${fs2}px 'Plus Jakarta Sans', system-ui, sans-serif`;
     ctx.fillStyle = "rgba(255,255,255,0.65)";  // softer white for secondary
     ctx.fillText(line2, textCX, startY + fs1 + lineGap + fs2 / 2);
   } else {
-    ctx.font = `500 ${fs1}px 'Kanit', 'Noto Sans Thai', sans-serif`;
+    ctx.font = `500 ${fs1}px 'Plus Jakarta Sans', system-ui, sans-serif`;
     ctx.fillStyle = "#ffffff";
     ctx.fillText(line1 || line2, textCX, barY + barH / 2);
   }
@@ -287,7 +287,7 @@ function LoginGate({ onAuth }) {
     if (pw === stored) onAuth(true); else setErr(true);
   };
   return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: S.bg, fontFamily: "Kanit, system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: S.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <div style={{ ...cardStyle(), width: "100%", maxWidth: 360, textAlign: "center" }}>
         <div style={{ fontSize: 40, marginBottom: 8 }}>🔐</div>
         <h2 style={{ fontSize: 20, fontWeight: 800, color: S.text }}>MPTI Admin</h2>
@@ -357,7 +357,7 @@ function Dashboard() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
               <thead><tr style={{ borderBottom: `1px solid ${S.border}` }}>
                 <th style={{ padding: 6, textAlign: "left" }}>Type</th>
-                <th style={{ padding: 6, textAlign: "right" }}>฿/month</th>
+                <th style={{ padding: 6, textAlign: "right" }}>Rp/month</th>
                 <th style={{ padding: 6, textAlign: "right" }}>Date</th>
               </tr></thead>
               <tbody>
@@ -366,9 +366,9 @@ function Dashboard() {
                   return (
                     <tr key={i} style={{ borderBottom: `1px solid ${S.border}` }}>
                       <td style={{ padding: 6 }}>{t?.e} {t?.name || u.typeKey}</td>
-                      <td style={{ padding: 6, textAlign: "right" }}>฿{u.monthlyWaste}</td>
+                      <td style={{ padding: 6, textAlign: "right" }}>Rp{u.monthlyWaste}</td>
                       <td style={{ padding: 6, textAlign: "right", color: S.muted }}>
-                        {u.timestamp ? new Date(u.timestamp).toLocaleDateString("th-TH", { day: "numeric", month: "short" }) : "—"}
+                        {u.timestamp ? new Date(u.timestamp).toLocaleDateString("id-ID", { day: "numeric", month: "short" }) : "—"}
                       </td>
                     </tr>
                   );
@@ -588,7 +588,7 @@ function QuestionsEditor() {
                 {editing === q.id && (
                   <div style={{ marginTop: 12, display: "grid", gap: 8 }}>
                     <div>
-                      <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Thai text</label>
+                      <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Indonesian text</label>
                       <input value={q.th} onChange={e => updateQ(q.id, "th", e.target.value)} style={inputStyle()} />
                     </div>
                     <div>
@@ -613,8 +613,8 @@ function QuestionsEditor() {
                       /* Open-amount config */
                       <div style={{ background: "#EFF6FF", borderRadius: 8, padding: 10, border: `1px solid #BFDBFE`, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                         <div>
-                          <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Unit（单位前缀，如 ฿）</label>
-                          <input value={q.unit || "฿"} onChange={e => updateQ(q.id, "unit", e.target.value)} style={inputStyle()} />
+                          <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Unit（如 Rp）</label>
+                          <input value={q.unit || "Rp"} onChange={e => updateQ(q.id, "unit", e.target.value)} style={inputStyle()} />
                         </div>
                         <div>
                           <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Placeholder（示例文字）</label>
@@ -648,7 +648,7 @@ function QuestionsEditor() {
                         <div style={{ fontSize: 12, fontWeight: 800, color: S.muted, marginTop: 4 }}>Options:</div>
                         {q.opts.map((opt, oi) => (
                           <div key={oi} style={{ display: "grid", gridTemplateColumns: "1fr 1fr 50px", gap: 6, alignItems: "center" }}>
-                            <input value={opt.th} onChange={e => updateOpt(q.id, oi, "th", e.target.value)} placeholder="Thai" style={inputStyle()} />
+                            <input value={opt.th} onChange={e => updateOpt(q.id, oi, "th", e.target.value)} placeholder="Indonesia" style={inputStyle()} />
                             <input value={opt.en} onChange={e => updateOpt(q.id, oi, "en", e.target.value)} placeholder="English" style={inputStyle()} />
                             <span style={{ fontSize: 12, fontWeight: 800, textAlign: "center", color: ["A","H","S","M"].includes(opt.s) ? S.accent : S.blue }}>{opt.s}</span>
                           </div>
@@ -721,7 +721,7 @@ function TypesEditor() {
                 {editing === key ? "Close" : "Edit"}
               </button>
             </div>
-            <div style={{ fontSize: 11, color: S.muted, marginTop: 2 }}>฿{t.min}–{t.max}/month · {t.equivTh}</div>
+            <div style={{ fontSize: 11, color: S.muted, marginTop: 2 }}>Rp{t.min}–{t.max}/month · {t.equivTh}</div>
             {editing === key && (
               <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                 {[["Name","name"],["Emoji","e"],["Thai label","th"],["English label","en"]].map(([label,f]) => (
@@ -731,11 +731,11 @@ function TypesEditor() {
                   </div>
                 ))}
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Min ฿/month</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Min Rp/month</label>
                   <input type="number" value={t.min} onChange={e => updateType(key, "min", +e.target.value)} style={inputStyle()} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Max ฿/month</label>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Max Rp/month</label>
                   <input type="number" value={t.max} onChange={e => updateType(key, "max", +e.target.value)} style={inputStyle()} />
                 </div>
                 <div style={{ gridColumn: "1/-1" }}>
@@ -1034,8 +1034,8 @@ function ScoringEditor() {
 
       {sectionCard("💰 Default Cost Baselines（题目无数值时使用）", (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-          <NumInput label="Default plan cost" value={sc.defaultPlanCost} onChange={v => upSc("defaultPlanCost", v)} unit="฿" />
-          <NumInput label="Default phone cost" value={sc.defaultPhoneCost} onChange={v => upSc("defaultPhoneCost", v)} unit="฿" />
+          <NumInput label="Default plan cost" value={sc.defaultPlanCost} onChange={v => upSc("defaultPlanCost", v)} unit="Rp" />
+          <NumInput label="Default phone cost" value={sc.defaultPhoneCost} onChange={v => upSc("defaultPhoneCost", v)} unit="Rp" />
           <NumInput label="Default phone years" value={sc.defaultPhoneYears} onChange={v => upSc("defaultPhoneYears", v)} step={0.5} unit="yr" />
         </div>
       ))}
@@ -1048,19 +1048,19 @@ function ScoringEditor() {
             baseline = L ≥ threshHL → baselineL，否则 baselineH（从总数扣除）
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-            <NumInput label="Subscription estimate (High)" value={sc.subHigh} onChange={v => upSc("subHigh", v)} unit="฿/mo" />
-            <NumInput label="Subscription estimate (Low)" value={sc.subLow} onChange={v => upSc("subLow", v)} unit="฿/mo" />
-            <NumInput label="Data overage (Q8 = H)" value={sc.dataHigh} onChange={v => upSc("dataHigh", v)} unit="฿/mo" />
-            <NumInput label="Data overage (Q8 = L)" value={sc.dataLow} onChange={v => upSc("dataLow", v)} unit="฿/mo" />
-            <NumInput label="Baseline deduction (L spender)" value={sc.baselineL} onChange={v => upSc("baselineL", v)} unit="฿" />
-            <NumInput label="Baseline deduction (H spender)" value={sc.baselineH} onChange={v => upSc("baselineH", v)} unit="฿" />
+            <NumInput label="Subscription estimate (High)" value={sc.subHigh} onChange={v => upSc("subHigh", v)} unit="Rp/mo" />
+            <NumInput label="Subscription estimate (Low)" value={sc.subLow} onChange={v => upSc("subLow", v)} unit="Rp/mo" />
+            <NumInput label="Data overage (Q8 = H)" value={sc.dataHigh} onChange={v => upSc("dataHigh", v)} unit="Rp/mo" />
+            <NumInput label="Data overage (Q8 = L)" value={sc.dataLow} onChange={v => upSc("dataLow", v)} unit="Rp/mo" />
+            <NumInput label="Baseline deduction (L spender)" value={sc.baselineL} onChange={v => upSc("baselineL", v)} unit="Rp" />
+            <NumInput label="Baseline deduction (H spender)" value={sc.baselineH} onChange={v => upSc("baselineH", v)} unit="Rp" />
           </div>
         </>
       ))}
 
       {sectionCard("🎯 Result Rounding", (
         <div style={{ maxWidth: 240 }}>
-          <NumInput label="Round final result to nearest N baht" value={sc.roundTo} onChange={v => upSc("roundTo", v)} min={1} unit="฿" />
+          <NumInput label="Round final result to nearest N rupiah" value={sc.roundTo} onChange={v => upSc("roundTo", v)} min={1} unit="Rp" />
         </div>
       ))}
 
@@ -1076,7 +1076,7 @@ function ScoringEditor() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
             <NumInput label="AHKM/PHKM → ADDONKING if H score ≥" value={sc.disambig.AHKM_addOnThresh} onChange={v => { upDis("AHKM_addOnThresh", v); upDis("PHKM_addOnThresh", v); }} min={1} />
-            <NumInput label="AHSC → OVERKILL if phoneCost >" value={sc.disambig.AHSC_priceThresh} onChange={v => upDis("AHSC_priceThresh", v)} unit="฿" min={1} />
+            <NumInput label="AHSC → OVERKILL if phoneCost >" value={sc.disambig.AHSC_priceThresh} onChange={v => upDis("AHSC_priceThresh", v)} unit="Rp" min={1} />
             <NumInput label="PHKC → BABY if P score ≥" value={sc.disambig.PHKC_pThresh} onChange={v => upDis("PHKC_pThresh", v)} min={1} />
             <NumInput label="PLKM → LOST if P score ≥" value={sc.disambig.PLKM_pThresh} onChange={v => upDis("PLKM_pThresh", v)} min={1} />
             <NumInput label="PLKM → GHOSTUSER if M score ≥" value={sc.disambig.PLKM_mThresh} onChange={v => upDis("PLKM_mThresh", v)} min={1} />
@@ -1717,7 +1717,7 @@ export default function AdminApp() {
   if (!authed) return <LoginGate onAuth={setAuthed} />;
 
   if (!synced) return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: S.bg, fontFamily: "Kanit, system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: S.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <div style={{ textAlign: "center", color: S.muted }}>
         <div style={{ width: 40, height: 40, borderRadius: 99, border: `4px solid ${S.border}`, borderTopColor: S.accent, margin: "0 auto 12px", animation: "spin 0.8s linear infinite" }} />
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
@@ -1727,7 +1727,7 @@ export default function AdminApp() {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: S.bg, fontFamily: "Kanit, system-ui, sans-serif", color: S.text }}>
+    <div style={{ minHeight: "100vh", background: S.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: S.text }}>
       <div style={{ position: "sticky", top: 0, zIndex: 20, background: "#fff", borderBottom: `1px solid ${S.border}`, padding: "10px 20px", display: "flex", alignItems: "center", gap: 12 }}>
         <button onClick={() => setSideOpen(!sideOpen)} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer" }}>☰</button>
         <span style={{ fontSize: 18, fontWeight: 900 }}>MPTI Admin</span>

@@ -5,159 +5,159 @@
 // ─── DEFAULT QUESTIONS ──────────────────────────────────────────
 
 export const DEFAULT_QUESTIONS = [
-  { id:1, dim:"AP", th:"คุณรู้ไหมว่าแพ็กมือถือเดือนละเท่าไหร่?", en:"Do you know your monthly mobile plan cost?",
+  { id:1, dim:"AP", th:"Apakah kamu tahu biaya paket HP-mu per bulan?", en:"Do you know your monthly mobile plan cost?",
     opts:[
-      {th:"รู้แม่นเลย รวมภาษีด้วย",en:"Exactly, including tax",s:"A"},
-      {th:"รู้คร่าวๆ หลายร้อยมั้ง",en:"Roughly, a few hundred baht",s:"P"},
-      {th:"รู้หมด แม้แต่เติมเน็ตจ่ายเท่าไหร่",en:"I track everything, even top-ups",s:"A"},
-      {th:"หักอัตโนมัติ ไม่เคยสนใจ",en:"Auto-deducted, never checked",s:"P"},
+      {th:"Tahu persis, termasuk pajak",en:"Exactly, including tax",s:"A"},
+      {th:"Kira-kira, ratusan ribu",en:"Roughly, a few hundred thousand",s:"P"},
+      {th:"Tahu semua, bahkan top-up data",en:"I track everything, even top-ups",s:"A"},
+      {th:"Potong otomatis, tidak pernah cek",en:"Auto-deducted, never checked",s:"P"},
     ]},
-  { id:2, dim:"AP", th:"ครั้งสุดท้ายที่เช็คบิลมือถือคือเมื่อไหร่?", en:"When did you last check your phone bill?",
+  { id:2, dim:"AP", th:"Kapan terakhir kali kamu cek tagihan HP?", en:"When did you last check your phone bill?",
     opts:[
-      {th:"เดือนนี้เช็คแล้ว",en:"Checked this month",s:"A"},
-      {th:"น่าจะปีที่แล้ว?",en:"Maybe last year?",s:"P"},
-      {th:"มีแอปบันทึกค่าใช้จ่ายโดยเฉพาะ",en:"I have an expense tracking app",s:"A"},
-      {th:"บิลอะไร? เช็คยังไง?",en:"What bill? How do I check?",s:"P"},
+      {th:"Bulan ini sudah cek",en:"Checked this month",s:"A"},
+      {th:"Mungkin tahun lalu?",en:"Maybe last year?",s:"P"},
+      {th:"Punya aplikasi pencatat pengeluaran",en:"I have an expense tracking app",s:"A"},
+      {th:"Tagihan apa? Gimana cara ceknya?",en:"What bill? How do I check?",s:"P"},
     ]},
-  { id:3, dim:"AP", th:"ตอนนี้มีกี่แอปที่ตัดเงินอัตโนมัติอยู่?", en:"How many apps are auto-charging you right now?",
+  { id:3, dim:"AP", th:"Sekarang ada berapa aplikasi yang auto-debit kamu?", en:"How many apps are auto-charging you right now?",
     opts:[
-      {th:"รู้จำนวนแน่นอน รู้ราคาทุกตัว",en:"I know the exact count and price",s:"A"},
-      {th:"มีหลายตัวมั้ง... ไม่แน่ใจ",en:"A few maybe... not sure",s:"P"},
-      {th:"เช็คทุกต้นเดือน",en:"I check every month",s:"A"},
-      {th:"อาจจะมี? ไม่รู้วิธีเช็ค",en:"Maybe? I don't know how to check",s:"P"},
+      {th:"Tahu jumlah pasti dan harga tiap-tiap satu",en:"I know the exact count and price",s:"A"},
+      {th:"Beberapa mungkin... tidak yakin",en:"A few maybe... not sure",s:"P"},
+      {th:"Cek setiap awal bulan",en:"I check every month",s:"A"},
+      {th:"Mungkin ada? Tidak tahu caranya",en:"Maybe? I don't know how to check",s:"P"},
     ]},
-  { id:4, dim:"AP", th:"ได้แจ้งเตือน 'เน็ตใกล้หมด' ทำยังไง?", en:"What do you do when you get a data alert?",
+  { id:4, dim:"AP", th:"Dapat notifikasi 'kuota hampir habis', kamu ngapain?", en:"What do you do when you get a data alert?",
     opts:[
-      {th:"ไม่มีทาง คุมได้ดี",en:"Never happens, I manage well",s:"A"},
-      {th:"เออ มาอีกแล้ว ซื้อเน็ตเพิ่มเลย",en:"Again? Just buy more data",s:"P"},
-      {th:"เช็คว่าแอปไหนกินเน็ต",en:"Check which app & restrict it",s:"A"},
-      {th:"ไม่สนใจ กดอะไรไปก็ไม่รู้",en:"Ignored it, tapped something",s:"P"},
+      {th:"Nggak mungkin, aku kelola dengan baik",en:"Never happens, I manage well",s:"A"},
+      {th:"Lagi? Langsung beli paket tambahan",en:"Again? Just buy more data",s:"P"},
+      {th:"Cek aplikasi mana yang boros data",en:"Check which app & restrict it",s:"A"},
+      {th:"Abaikan, pencet sesuatu entah apa",en:"Ignored it, tapped something",s:"P"},
     ]},
-  { id:5, dim:"AP", th:"บอกได้ไหมว่าเดือนนึงจ่ายมือถือทั้งหมดเท่าไหร่?", en:"Can you tell me your total monthly phone spending?",
+  { id:5, dim:"AP", th:"Bisa sebutin total pengeluaran HP-mu per bulan?", en:"Can you tell me your total monthly phone spending?",
     opts:[
-      {th:"ได้เลย ประมาณ ฿___",en:"Yes, roughly ฿___",s:"A"},
-      {th:"รู้แค่ค่าแพ็ก ที่เหลือไม่แน่ใจ",en:"Just the plan, rest unclear",s:"P"},
-      {th:"มีบันทึกไว้ เปิดดูได้เลย",en:"I have records",s:"A"},
-      {th:"บอกไม่ได้เลย",en:"Can't tell at all",s:"P"},
+      {th:"Bisa, sekitar Rp___",en:"Yes, roughly Rp___",s:"A"},
+      {th:"Cuma tahu biaya paket, sisanya nggak yakin",en:"Just the plan, rest unclear",s:"P"},
+      {th:"Ada catatannya, bisa langsung cek",en:"I have records",s:"A"},
+      {th:"Sama sekali tidak bisa",en:"Can't tell at all",s:"P"},
     ]},
   { id:6, dim:"HL", type:"open-amount",
-    th:"ค่าแพ็กมือถือต่อเดือนของคุณเท่าไหร่?", en:"How much is your monthly mobile plan?",
-    unit:"฿", placeholder:"เช่น 299", priceKey:"planCost", dimThresh:200, maxVal:3000, opts:[]},
-  { id:7, dim:"HL", th:"มีแอปเสียเงินหรือ subscription อะไรบ้าง?", en:"Do you have paid apps or subscriptions?",
+    th:"Berapa biaya paket HP-mu per bulan?", en:"How much is your monthly mobile plan?",
+    unit:"Rp", placeholder:"mis. 100.000", priceKey:"planCost", dimThresh:80000, maxVal:1500000, opts:[]},
+  { id:7, dim:"HL", th:"Punya aplikasi berbayar atau langganan apa saja?", en:"Do you have paid apps or subscriptions?",
     opts:[
-      {th:"3 ตัวขึ้นไป",en:"3+ subscriptions",s:"H"},
-      {th:"1–2 ตัว ใช้ประจำ",en:"1–2, use regularly",s:"H"},
-      {th:"เคยมี แต่ยกเลิกหมดแล้ว",en:"Had some, cancelled all",s:"L"},
-      {th:"ไม่เคยซื้อแอปเสียเงิน",en:"Never bought paid apps",s:"L"},
+      {th:"3 atau lebih",en:"3+ subscriptions",s:"H"},
+      {th:"1–2, dipakai rutin",en:"1–2, use regularly",s:"H"},
+      {th:"Dulu punya, sudah dibatalkan semua",en:"Had some, cancelled all",s:"L"},
+      {th:"Tidak pernah beli aplikasi berbayar",en:"Never bought paid apps",s:"L"},
     ]},
-  { id:8, dim:"HL", th:"ปลายเดือนเน็ตไม่พอ ทำไง?", en:"End of month, data's not enough?",
+  { id:8, dim:"HL", th:"Akhir bulan kuota hampir habis, ngapain?", en:"End of month, data's not enough?",
     opts:[
-      {th:"ซื้อแพ็กใหญ่สุดเลย ไม่แคร์",en:"Buy the biggest pack",s:"H"},
-      {th:"ซื้อแพ็กเล็กๆ ประคอง",en:"Buy a small pack",s:"H"},
-      {th:"ทน รอต้นเดือน เกาะ WiFi",en:"Wait, use WiFi",s:"L"},
-      {th:"ไม่เคยเจอ แพ็กพอ / ใช้ WiFi",en:"Never happens",s:"L"},
+      {th:"Beli paket terbesar, gak peduli",en:"Buy the biggest pack",s:"H"},
+      {th:"Beli paket kecil buat bertahan",en:"Buy a small pack",s:"H"},
+      {th:"Tahan, tunggu awal bulan, pakai WiFi",en:"Wait, use WiFi",s:"L"},
+      {th:"Tidak pernah, paket cukup / pakai WiFi",en:"Never happens",s:"L"},
     ]},
-  { id:9, dim:"HL", th:"เคยเติมเงินในเกมหรือแอปไหม?", en:"Spent money in games or apps?",
+  { id:9, dim:"HL", th:"Pernah top-up di game atau aplikasi?", en:"Spent money in games or apps?",
     opts:[
-      {th:"ประจำ เดือนละหลายร้อย",en:"Regularly",s:"H"},
-      {th:"บ้างนิดหน่อย",en:"A little",s:"H"},
-      {th:"เคยสักครั้งสองครั้ง",en:"Once or twice",s:"L"},
-      {th:"ไม่เคย ของฟรีเล่นได้",en:"Never",s:"L"},
+      {th:"Rutin, ratusan ribu per bulan",en:"Regularly",s:"H"},
+      {th:"Sesekali, sedikit",en:"A little",s:"H"},
+      {th:"Pernah sekali dua kali",en:"Once or twice",s:"L"},
+      {th:"Tidak pernah, yang gratis cukup",en:"Never",s:"L"},
     ]},
-  { id:10, dim:"HL", th:"ซื้อเคส/อุปกรณ์เสริมประมาณเท่าไหร่?", en:"Spend on cases/accessories?",
+  { id:10, dim:"HL", th:"Habis berapa buat beli casing/aksesori?", en:"Spend on cases/accessories?",
     opts:[
-      {th:"หลายร้อยถึงพัน ต้องของดี",en:"Hundreds to thousands",s:"H"},
-      {th:"ร้อยสองร้อย พอใช้ก็พอ",en:"100–200",s:"L"},
-      {th:"ถูกสุดใน Shopee",en:"Cheapest on Shopee",s:"L"},
-      {th:"ไม่ใช้เคส ใช้เปล่า",en:"No case",s:"L"},
+      {th:"Ratusan hingga jutaan, harus yang bagus",en:"Hundreds to millions",s:"H"},
+      {th:"50–100 ribu, yang penting ada",en:"50–100k",s:"L"},
+      {th:"Termurah di Shopee/Tokopedia",en:"Cheapest on Shopee",s:"L"},
+      {th:"Tidak pakai casing",en:"No case",s:"L"},
     ]},
-  { id:11, dim:"SK", th:"มือถือตัวปัจจุบันใช้มานานแค่ไหน?", en:"How long using current phone?",
+  { id:11, dim:"SK", th:"Sudah berapa lama pakai HP yang sekarang?", en:"How long using current phone?",
     opts:[
-      {th:"ไม่ถึงปี",en:"Less than 1 year",s:"S",val:0.5},
-      {th:"1–2 ปี",en:"1–2 years",s:"S",val:1.5},
-      {th:"2–3 ปี",en:"2–3 years",s:"K",val:2.5},
-      {th:"3 ปีขึ้นไป",en:"3+ years",s:"K",val:4},
+      {th:"Kurang dari 1 tahun",en:"Less than 1 year",s:"S",val:0.5},
+      {th:"1–2 tahun",en:"1–2 years",s:"S",val:1.5},
+      {th:"2–3 tahun",en:"2–3 years",s:"K",val:2.5},
+      {th:"3 tahun lebih",en:"3+ years",s:"K",val:4},
     ]},
-  { id:12, dim:"SK", th:"เห็นมือถือรุ่นใหม่เปิดตัว รู้สึกยังไง?", en:"How do you feel when a new phone launches?",
+  { id:12, dim:"SK", th:"Lihat HP baru diluncurkan, gimana perasaanmu?", en:"How do you feel when a new phone launches?",
     opts:[
-      {th:"เช็คราคาและวันพรีออเดอร์แล้ว",en:"Already checking price",s:"S"},
-      {th:"ใจสั่น แต่ดูก่อน",en:"Tempted",s:"S"},
-      {th:"ดูเฉยๆ ของเรายังใช้ได้",en:"Mine still works",s:"K"},
-      {th:"ไม่สนใจ ไม่เกี่ยวกับเรา",en:"Don't care",s:"K"},
+      {th:"Sudah cek harga dan tanggal pre-order",en:"Already checking price",s:"S"},
+      {th:"Deg-degan, tapi lihat dulu",en:"Tempted",s:"S"},
+      {th:"Biasa aja, HP aku masih oke",en:"Mine still works",s:"K"},
+      {th:"Tidak peduli, tidak ada hubungannya",en:"Don't care",s:"K"},
     ]},
-  { id:13, dim:"SK", th:"มือถือเก่าไปไหน?", en:"Where's your old phone?",
+  { id:13, dim:"SK", th:"HP lamamu ke mana?", en:"Where's your old phone?",
     opts:[
-      {th:"ขายแล้ว / เทิร์นแล้ว",en:"Sold or traded in",s:"S"},
-      {th:"ให้คนในครอบครัว / เพื่อน",en:"Gave away",s:"S"},
-      {th:"อยู่ในลิ้นชัก",en:"In a drawer",s:"K"},
-      {th:"ใช้เครื่องแรกอยู่",en:"Still using first phone",s:"K"},
+      {th:"Sudah dijual / trade-in",en:"Sold or traded in",s:"S"},
+      {th:"Diberikan ke keluarga / teman",en:"Gave away",s:"S"},
+      {th:"Di dalam laci",en:"In a drawer",s:"K"},
+      {th:"Masih pakai HP pertama",en:"Still using first phone",s:"K"},
     ]},
-  { id:14, dim:"SK", th:"หน้าจอร้าว ทำไง?", en:"Screen cracked — what now?",
+  { id:14, dim:"SK", th:"Layar retak — mau ngapain?", en:"Screen cracked — what now?",
     opts:[
-      {th:"ได้เวลาเปลี่ยนเครื่องใหม่!",en:"Time for a new phone",s:"S"},
-      {th:"เช็คราคาเครื่องใหม่ดูก่อน...",en:"Check new phone prices",s:"S"},
-      {th:"เอาไปซ่อม",en:"Get it fixed",s:"K"},
-      {th:"แปะฟิล์มทับ ใช้ต่อ",en:"Use it anyway",s:"K"},
+      {th:"Saatnya ganti HP baru!",en:"Time for a new phone",s:"S"},
+      {th:"Cek harga HP baru dulu...",en:"Check new phone prices",s:"S"},
+      {th:"Bawa ke tukang servis",en:"Get it fixed",s:"K"},
+      {th:"Tempel tempered glass, pakai terus",en:"Use it anyway",s:"K"},
     ]},
   { id:15, dim:"SK", type:"open-amount",
-    th:"มือถือเครื่องก่อนราคาเท่าไหร่?", en:"How much did your previous phone cost?",
-    unit:"฿", placeholder:"เช่น 8990", priceKey:"phoneCost", dimThresh:8000, maxVal:60000, opts:[]},
-  { id:16, dim:"MC", th:"ตอนนี้มีรูปในมือถือกี่รูป?", en:"How many photos on your phone?",
+    th:"Berapa harga HP lamamu?", en:"How much did your previous phone cost?",
+    unit:"Rp", placeholder:"mis. 3.000.000", priceKey:"phoneCost", dimThresh:3000000, maxVal:25000000, opts:[]},
+  { id:16, dim:"MC", th:"Sekarang ada berapa foto di HP-mu?", en:"How many photos on your phone?",
     opts:[
-      {th:"ไม่ถึง 1,000 ลบเป็นประจำ",en:"Under 1,000",s:"C"},
-      {th:"1,000–5,000",en:"1,000–5,000",s:"M"},
-      {th:"5,000–10,000",en:"5,000–10,000",s:"M"},
-      {th:"10,000+ มือถือคือพิพิธภัณฑ์",en:"10,000+",s:"M"},
+      {th:"Kurang dari 1.000, rutin dihapus",en:"Under 1,000",s:"C"},
+      {th:"1.000–5.000",en:"1,000–5,000",s:"M"},
+      {th:"5.000–10.000",en:"5,000–10,000",s:"M"},
+      {th:"10.000+, HP-mu kayak museum",en:"10,000+",s:"M"},
     ]},
-  { id:17, dim:"MC", th:"มีแอปในมือถือกี่ตัว?", en:"How many apps?",
+  { id:17, dim:"MC", th:"Berapa aplikasi di HP-mu?", en:"How many apps?",
     opts:[
-      {th:"ไม่เกิน 30 ใช้ทุกตัว",en:"Under 30",s:"C"},
-      {th:"ประมาณ 50",en:"About 50",s:"M"},
-      {th:"นับไม่ถ้วน",en:"Countless",s:"M"},
-      {th:"หน้าที่สองไม่กล้าดู",en:"Afraid to look",s:"M"},
+      {th:"Kurang dari 30, semuanya dipakai",en:"Under 30",s:"C"},
+      {th:"Sekitar 50",en:"About 50",s:"M"},
+      {th:"Tidak terhitung",en:"Countless",s:"M"},
+      {th:"Halaman kedua tidak berani lihat",en:"Afraid to look",s:"M"},
     ]},
-  { id:18, dim:"MC", th:"แจ้งเตือนที่ยังไม่ได้อ่านกี่อัน?", en:"Unread notifications?",
+  { id:18, dim:"MC", th:"Berapa notifikasi yang belum dibaca?", en:"Unread notifications?",
     opts:[
-      {th:"0 — จุดแดงทำให้กังวล",en:"0",s:"C"},
-      {th:"ไม่กี่อัน",en:"A few",s:"C"},
-      {th:"หลายสิบ",en:"Dozens",s:"M"},
-      {th:"999+ เราไม่พูดเรื่องนี้",en:"999+",s:"M"},
+      {th:"0 — titik merah bikin gelisah",en:"0",s:"C"},
+      {th:"Hanya beberapa",en:"A few",s:"C"},
+      {th:"Puluhan",en:"Dozens",s:"M"},
+      {th:"999+, jangan bahas",en:"999+",s:"M"},
     ]},
-  { id:19, dim:"MC", th:"หน้าจอหลักเป็นยังไง?", en:"Home screen look?",
+  { id:19, dim:"MC", th:"Tampilan home screen-mu gimana?", en:"Home screen look?",
     opts:[
-      {th:"หน้าเดียว โฟลเดอร์จัดระเบียบ",en:"One page",s:"C"},
-      {th:"สองหน้า พอเป็นระเบียบ",en:"Two pages",s:"C"},
-      {th:"สามหน้าขึ้น",en:"3+ pages",s:"M"},
-      {th:"วอลเปเปอร์? มองไม่เห็นแล้ว",en:"Can't see wallpaper",s:"M"},
+      {th:"Satu halaman, folder rapi",en:"One page",s:"C"},
+      {th:"Dua halaman, cukup rapi",en:"Two pages",s:"C"},
+      {th:"3 halaman lebih",en:"3+ pages",s:"M"},
+      {th:"Wallpaper? Sudah tidak kelihatan",en:"Can't see wallpaper",s:"M"},
     ]},
-  { id:20, dim:"MC", th:"พื้นที่เก็บข้อมูลตอนนี้เป็นยังไง?", en:"Storage status?",
+  { id:20, dim:"MC", th:"Kapasitas penyimpanan-mu sekarang?", en:"Storage status?",
     opts:[
-      {th:"🟢 เขียว — เหลือเยอะ",en:"Green",s:"C"},
-      {th:"🟡 เหลือง — ยังไหว",en:"Yellow",s:"C"},
-      {th:"🟠 ส้ม — พื้นที่ไม่พอบ่อย",en:"Orange",s:"M"},
-      {th:"🔴 แดง — มือถือขอร้องทุกวัน",en:"Red",s:"M"},
+      {th:"🟢 Hijau — masih banyak",en:"Green",s:"C"},
+      {th:"🟡 Kuning — masih oke",en:"Yellow",s:"C"},
+      {th:"🟠 Oranye — sering tidak cukup",en:"Orange",s:"M"},
+      {th:"🔴 Merah — HP minta tolong tiap hari",en:"Red",s:"M"},
     ]},
 ];
 
 // ─── DEFAULT TYPES ──────────────────────────────────────────────
 
 export const DEFAULT_TYPES = {
-  SUCKER:     { name:"SUCKER",      e:"💸", th:"คนโดนเก็บ",        en:"The Mark",        min:300, max:800,  equivTh:"Redmi ใหม่ 1 เครื่อง",       tagTh:"คุณไม่ได้ใช้มือถือ คุณถูกเก็บเกี่ยว",        color:"#FF4444", img:"SUCKER.png" },
-  ADDICT:     { name:"ADDICT",      e:"🔥", th:"คนติด",            en:"The Addict",      min:400, max:1200, equivTh:"บินเชียงใหม่ 6 รอบ",         tagTh:"คุณเลื่อนไม่ใช่หน้าจอ แต่เลื่อนยอดเงิน",  color:"#FF6B00", img:"ADDICT.png" },
-  FLEXER:     { name:"FLEXER",      e:"💅", th:"คนอวด",            en:"The Flexer",      min:500, max:1500, equivTh:"iPad ใหม่ 1 เครื่อง",         tagTh:"คุณซื้อมือถือไม่ใช่เพื่อใช้ แต่เพื่อให้คนเห็น", color:"#E91E63", img:"FLEXER.png" },
-  SWITCHER:   { name:"SWITCHER",    e:"🔄", th:"คนเปลี่ยนใจ",      en:"The Switcher",    min:400, max:1000, equivTh:"ซื้อให้ทั้งบ้านคนละเครื่อง",    tagTh:"คุณเปลี่ยนไม่ใช่มือถือ แต่เปลี่ยนความเสียใจ", color:"#9C27B0", img:"SWITCHER.png" },
-  HOARDER:    { name:"HOARDER",     e:"🗑",  th:"คนสะสม",           en:"Digital Hoarder", min:150, max:400,  equivTh:"หมูปิ้ง 360 ไม้",             tagTh:"มือถือช้าไม่ใช่เพราะเก่า แต่เพราะคุณไม่ยอมลบ", color:"#795548", img:"HOARDER.png" },
-  TRYHARD:    { name:"TRY HARD",    e:"🤡", th:"คนพยายาม",         en:"The Try Hard",    min:200, max:500,  equivTh:"สมาชิกฟิตเนส 3 ปี",         tagTh:"คุณพยายามมาก แต่ไม่มีอะไรประหยัดจริง",    color:"#FF9800", img:"TRYHARD.png" },
-  SUBSCRIBER: { name:"SUBSCRIBER",  e:"📦", th:"คนสมัครสมาชิก",    en:"Sub Victim",      min:200, max:600,  equivTh:"Starbucks 24 แก้ว",          tagTh:"คุณจ่ายค่าเช่าให้แอปที่ไม่ได้ใช้",         color:"#2196F3", img:"SUBSCRIBER.png" },
-  DATABURNER: { name:"DATA BURNER", e:"📡", th:"คนเผาเน็ต",        en:"Data Burner",     min:300, max:700,  equivTh:"ค่าห้องหาร 4 เดือน",        tagTh:"คุณเลื่อนไม่ใช่วิดีโอ แต่เลื่อนเน็ต",      color:"#00BCD4", img:"DATABURNER.png" },
-  BABY:       { name:"BABY",        e:"👶", th:"เด็กน้อย",          en:"The Baby",        min:300, max:800,  equivTh:"ชานม 120 แก้ว",             tagTh:"คุณจ่ายแพง ไม่ใช่เพราะอยาก แต่เพราะไม่รู้", color:"#4CAF50", img:"BABY.png" },
-  LOST:       { name:"LOST",        e:"🤯", th:"คนหลงทาง",         en:"The Lost",        min:250, max:600,  equivTh:"นั่ง BTS 600 เที่ยว",        tagTh:"คุณไม่รู้ว่าจ่ายอะไร ไม่รู้จ่ายที่ไหน",      color:"#607D8B", img:"LOST.png" },
-  CHEAPO:     { name:"CHEAPO",      e:"🪙", th:"คนประหยัดสุดโต่ง",  en:"The Cheapo",      min:50,  max:200,  equivTh:"เคสมือถือ 1 อัน",            tagTh:"คุณประหยัดเงิน แต่เสียเวลา",              color:"#8BC34A", img:"CHEAPO.png" },
-  ADDONKING:  { name:"ADD-ON KING", e:"👑", th:"ราชาแพ็กเสริม",     en:"Add-On King",     min:300, max:900,  equivTh:"เที่ยวภูเก็ต 1 ทริป",       tagTh:"คุณซื้อแพ็กซ้อนแพ็ก",                      color:"#FFC107", img:"ADDONKING.png" },
-  CHAOS:      { name:"CHAOS",       e:"🌀", th:"คนวุ่นวาย",         en:"Pure Chaos",      min:300, max:800,  equivTh:"กาแฟ 200 แก้ว",             tagTh:"มือถือเหมือนชีวิต สุดจะควบคุม",            color:"#673AB7", img:"CHAOS.png" },
-  GHOSTUSER:  { name:"GHOST USER",  e:"👻", th:"ผู้ใช้ล่องหน",      en:"Ghost User",      min:150, max:500,  equivTh:"Nike 2 คู่",                tagTh:"คุณไม่รู้ด้วยซ้ำว่าคุณใช้มือถือ",           color:"#94A3B8", img:"GHOSTUSER.png" },
-  OVERKILL:   { name:"OVERKILL",    e:"💣", th:"คนเกินจำเป็น",      en:"Overkill",        min:400, max:1000, equivTh:"12 เดือน Netflix+Spotify",   tagTh:"คุณใช้เรือธง แค่เลื่อน TikTok",             color:"#F44336", img:"OVERKILL.png" },
-  BROKELOOP:  { name:"BROKE LOOP",  e:"🔁", th:"วนซ้ำ",            en:"Broke Loop",      min:300, max:900,  equivTh:"มือถือราคาถูก 3 เครื่อง",     tagTh:"คุณประหยัดตลอด แต่จ่ายมากขึ้นเรื่อยๆ",     color:"#FF5722", img:"BROKELOOP.png" },
+  SUCKER:     { name:"SUCKER",      e:"💸", th:"Korban",            en:"The Mark",        min:150000, max:400000,  equivTh:"HP Redmi baru 1 unit",          tagTh:"Kamu tidak pakai HP, kamu diperas",               color:"#FF4444", img:"SUCKER.png" },
+  ADDICT:     { name:"ADDICT",      e:"🔥", th:"Kecanduan",         en:"The Addict",      min:200000, max:600000,  equivTh:"Tiket pesawat PP 6 kali",        tagTh:"Kamu scrolling bukan layar, tapi saldo",           color:"#FF6B00", img:"ADDICT.png" },
+  FLEXER:     { name:"FLEXER",      e:"💅", th:"Pamer",             en:"The Flexer",      min:250000, max:750000,  equivTh:"iPad baru 1 unit",               tagTh:"Kamu beli HP bukan buat dipakai, tapi buat dilihat", color:"#E91E63", img:"FLEXER.png" },
+  SWITCHER:   { name:"SWITCHER",    e:"🔄", th:"Pindah-pindah",     en:"The Switcher",    min:200000, max:500000,  equivTh:"Beli HP satu keluarga",          tagTh:"Kamu ganti bukan HP-nya, tapi penyesalannya",      color:"#9C27B0", img:"SWITCHER.png" },
+  HOARDER:    { name:"HOARDER",     e:"🗑",  th:"Penumpuk",          en:"Digital Hoarder", min:75000,  max:200000,  equivTh:"Sate 360 tusuk",                 tagTh:"HP lambat bukan karena tua, tapi karena kamu nggak mau hapus", color:"#795548", img:"HOARDER.png" },
+  TRYHARD:    { name:"TRY HARD",    e:"🤡", th:"Sok Hemat",         en:"The Try Hard",    min:100000, max:250000,  equivTh:"Member gym 3 tahun",             tagTh:"Kamu berusaha keras, tapi tidak ada yang benar-benar hemat", color:"#FF9800", img:"TRYHARD.png" },
+  SUBSCRIBER: { name:"SUBSCRIBER",  e:"📦", th:"Pelanggan",         en:"Sub Victim",      min:100000, max:300000,  equivTh:"Starbucks 24 cup",               tagTh:"Kamu bayar sewa aplikasi yang tidak pernah dipakai", color:"#2196F3", img:"SUBSCRIBER.png" },
+  DATABURNER: { name:"DATA BURNER", e:"📡", th:"Boros Data",        en:"Data Burner",     min:150000, max:350000,  equivTh:"Kontrakan dibagi 4 bulan",       tagTh:"Kamu scrolling bukan video, tapi kuota",           color:"#00BCD4", img:"DATABURNER.png" },
+  BABY:       { name:"BABY",        e:"👶", th:"Si Polos",          en:"The Baby",        min:150000, max:400000,  equivTh:"Boba 120 cup",                   tagTh:"Kamu bayar mahal bukan karena mau, tapi karena tidak tahu", color:"#4CAF50", img:"BABY.png" },
+  LOST:       { name:"LOST",        e:"🤯", th:"Tersesat",          en:"The Lost",        min:125000, max:300000,  equivTh:"Naik MRT 600 kali",              tagTh:"Kamu tidak tahu bayar apa, tidak tahu bayar di mana", color:"#607D8B", img:"LOST.png" },
+  CHEAPO:     { name:"CHEAPO",      e:"🪙", th:"Hemat Ekstrem",     en:"The Cheapo",      min:25000,  max:100000,  equivTh:"Casing HP 1 buah",               tagTh:"Kamu hemat uang, tapi buang waktu",                color:"#8BC34A", img:"CHEAPO.png" },
+  ADDONKING:  { name:"ADD-ON KING", e:"👑", th:"Raja Paket",        en:"Add-On King",     min:150000, max:450000,  equivTh:"Liburan Bali 1 trip",            tagTh:"Kamu beli paket di atas paket",                    color:"#FFC107", img:"ADDONKING.png" },
+  CHAOS:      { name:"CHAOS",       e:"🌀", th:"Kacau Balau",       en:"Pure Chaos",      min:150000, max:400000,  equivTh:"Kopi 200 gelas",                 tagTh:"HP seperti hidup, susah dikontrol",                color:"#673AB7", img:"CHAOS.png" },
+  GHOSTUSER:  { name:"GHOST USER",  e:"👻", th:"Pengguna Hantu",    en:"Ghost User",      min:75000,  max:250000,  equivTh:"Nike 2 pasang",                  tagTh:"Kamu bahkan tidak sadar kamu pakai HP",            color:"#94A3B8", img:"GHOSTUSER.png" },
+  OVERKILL:   { name:"OVERKILL",    e:"💣", th:"Berlebihan",        en:"Overkill",        min:200000, max:500000,  equivTh:"12 bulan Netflix+Spotify",       tagTh:"Kamu pakai flagship cuma buat scroll TikTok",      color:"#F44336", img:"OVERKILL.png" },
+  BROKELOOP:  { name:"BROKE LOOP",  e:"🔁", th:"Lingkaran Setan",   en:"Broke Loop",      min:150000, max:450000,  equivTh:"HP murah 3 unit",                tagTh:"Kamu hemat terus tapi pengeluaran makin besar",    color:"#FF5722", img:"BROKELOOP.png" },
 };
 
 // ─── DEFAULT COMBO MAP (all 16 possible 4-dim combos) ───────────
@@ -178,10 +178,10 @@ export const DEFAULT_COMBO_MAP = {
 // ─── DEFAULT RECOVERY CARDS ─────────────────────────────────────
 
 export const DEFAULT_RECOVERY_CARDS = [
-  { no:"01", icon:"📦", title:"BIG GAMES.\nZERO STORAGE.", bodyTh:"รันทุกอย่างบนคลาวด์ ไม่ต้องโหลด", saveRatio:0.35, tags:["No storage","Less data"] },
-  { no:"02", icon:"🌙", title:"SLEEP.\nIT KEEPS RUNNING.", bodyTh:"Roblox รัน 24 ชม. ไม่กินแบต ไม่ร้อน", saveRatio:0.30, tags:["24/7","No battery"] },
-  { no:"03", icon:"💬", title:"YOU CHAT.\nIT WORKS SILENTLY.", bodyTh:"ภารกิจรันบนคลาวด์ มือถือยังใช้ LINE ได้", saveRatio:0.20, tags:["Silent","Multitask"] },
-  { no:"04", icon:"⚡", title:"TAP.\nPLAY INSTANTLY.", bodyTh:"ลองเกมใหม่ทันที 1 วินาที ไม่เสียเวลา", saveRatio:0.15, tags:["1 sec","No install"] },
+  { no:"01", icon:"📦", title:"BIG GAMES.\nZERO STORAGE.", bodyTh:"Jalankan semua di cloud, tidak perlu download", saveRatio:0.35, tags:["No storage","Less data"] },
+  { no:"02", icon:"🌙", title:"SLEEP.\nIT KEEPS RUNNING.", bodyTh:"Roblox jalan 24 jam, baterai aman, tidak panas", saveRatio:0.30, tags:["24/7","No battery"] },
+  { no:"03", icon:"💬", title:"YOU CHAT.\nIT WORKS SILENTLY.", bodyTh:"Misi jalan di cloud, HP masih bisa dipakai WA", saveRatio:0.20, tags:["Silent","Multitask"] },
+  { no:"04", icon:"⚡", title:"TAP.\nPLAY INSTANTLY.", bodyTh:"Coba game baru langsung 1 detik, tidak buang waktu", saveRatio:0.15, tags:["1 sec","No install"] },
 ];
 
 // ─── DEFAULT COVER CONTENT ──────────────────────────────────────
@@ -190,13 +190,13 @@ export const DEFAULT_COVER_CONTENT = {
   badge: "MONEY LEAK TEST",
   titleLine1: "WHERE IS YOUR",
   titleLine2: "MONEY GOING?",
-  descLine1: "คุณเสียเงินไปเท่าไหร่โดยไม่รู้ตัว?",
-  descLine2: "แบบทดสอบ 20 ข้อ · 16 ประเภทบุคลิก · 3 นาที",
-  feat1: "4 มิติวิเคราะห์พฤติกรรมการใช้เงิน",
-  feat2: "คำนวณยอดเงินที่เสียไปจริงๆ",
-  feat3: "แผนเอาเงินคืนเฉพาะคุณ",
-  ctaBtn: "เริ่มทดสอบเลย! 🚀",
-  footer: "🔒 ปลอดภัย · ฟรี · ไม่ต้องสมัคร",
+  descLine1: "Berapa banyak uang yang kamu buang tanpa sadar?",
+  descLine2: "20 pertanyaan · 16 tipe kepribadian · 3 menit",
+  feat1: "4 dimensi analisis perilaku pengeluaran",
+  feat2: "Hitung jumlah uang yang benar-benar terbuang",
+  feat3: "Rencana pemulihan keuangan khusus untukmu",
+  ctaBtn: "Mulai tes sekarang! 🚀",
+  footer: "🔒 Aman · Gratis · Tanpa daftar",
 };
 
 // ─── DEFAULT SCORING CONFIG ─────────────────────────────────────
@@ -212,24 +212,24 @@ export const DEFAULT_SCORING = {
   threshMC: 3,  // M if scores.M >= 3, else C
 
   // Default costs when quiz answers don't provide a value
-  defaultPlanCost: 250,
-  defaultPhoneCost: 8000,
+  defaultPlanCost: 100000,
+  defaultPhoneCost: 3000000,
   defaultPhoneYears: 2.5,
 
   // Monthly subscription estimate (by H/L result)
-  subHigh: 180,
-  subLow: 50,
+  subHigh: 80000,
+  subLow: 20000,
 
   // Data overage estimate (by Q8 answer)
-  dataHigh: 120,
-  dataLow: 30,
+  dataHigh: 50000,
+  dataLow: 15000,
 
   // Baseline deduction (H spenders have higher baseline)
-  baselineL: 80,
-  baselineH: 150,
+  baselineL: 35000,
+  baselineH: 70000,
 
-  // Round final result to nearest N baht
-  roundTo: 10,
+  // Round final result to nearest N rupiah
+  roundTo: 1000,
 
   // Disambiguation rule thresholds (override base combo map for specific combos)
   disambig: {
@@ -238,7 +238,7 @@ export const DEFAULT_SCORING = {
     AHKM_addOnThresh: 4,
     // PHKM same logic: passive high-keeper-messy gets a second path to ADDONKING/DATABURNER
     PHKM_addOnThresh: 4,
-    AHSC_priceThresh: 18000, // AHSC: phoneCost > X → OVERKILL (else FLEXER)
+    AHSC_priceThresh: 8000000, // AHSC: phoneCost > X → OVERKILL (else FLEXER)
     PHKC_pThresh: 4,         // PHKC: P score >= X → BABY (else SUBSCRIBER)
     PLKM_pThresh: 4,         // PLKM: P score >= X → LOST
     PLKM_mThresh: 4,         // PLKM: M score >= X → GHOSTUSER (else HOARDER)
@@ -253,7 +253,7 @@ export const DEFAULT_SETTINGS = {
   redfingerUrl: "https://www.cloudemulator.net/app/sign-in?channelCode=web",
   socialProofFallback: 52431,
   siteName: "MPTI",
-  localeBadge: "TH 🇹🇭",
+  localeBadge: "ID 🇮🇩",
   fakeCountMin: 10000,
   fakeCountMax: 15000,
   fakeCountThreshold: 13324,
@@ -265,23 +265,23 @@ export const DEFAULT_SETTINGS = {
   // Share image overlay bar
   overlayEnabled: true,
   overlayQrUrl: "",
-  overlayText: "สแกนทดสอบ MPTI ของคุณ",
-  overlayText2: "ค้นพบบุคลิกการใช้เงินของคุณ →",
+  overlayText: "Scan test MPTI kamu",
+  overlayText2: "Temukan kepribadian keuanganmu →",
   overlayBarColor: "#1B2FA0",
-  // JSONBin — cloud config sync
-  jsonbinId: "6a0d553eee5a733b12eb417b",
-  jsonbinKey: "$2a$10$WdDmvg43kpbqaSAc0NiGyuOi5E8hXZPJGz63DAqGiFzNUGyGMi8OK",
+  // JSONBin — cloud config sync (set via admin panel for Indonesia deployment)
+  jsonbinId: "",
+  jsonbinKey: "",
 };
 
 // ─── DEFAULT EQUIV REFERENCES ───────────────────────────────────
 
 export const DEFAULT_EQUIV_REFS = [
-  { label: "Netflix/เดือน",  price: 349 },
-  { label: "Spotify/เดือน",  price: 129 },
-  { label: "AIS/เดือน",      price: 599 },
-  { label: "ตั๋วหนัง",        price: 220 },
-  { label: "ชานม",            price: 65  },
-  { label: "iPhone 16",      price: 35900 },
+  { label: "Netflix/bulan",    price: 186000 },
+  { label: "Spotify/bulan",    price: 69000  },
+  { label: "Telkomsel/bulan",  price: 150000 },
+  { label: "Tiket bioskop",    price: 50000  },
+  { label: "Boba",             price: 35000  },
+  { label: "iPhone 16",        price: 17000000 },
 ];
 
 // Pick the reference item whose ratio gives the most readable comparison
@@ -295,57 +295,57 @@ export function calcEquivLabel(monthlyWaste, refs) {
   });
   scored.sort((a, b) => a.score - b.score);
   const { ref, ratio } = scored[0];
-  if (ratio >= 12) return `${(ratio / 12).toFixed(1)} ปี ${ref.label}`;
-  if (ratio >= 1)  return `${Math.round(ratio)} เดือน ${ref.label}`;
-  return `${Math.round(ratio * 30)} วัน ${ref.label}`;
+  if (ratio >= 12) return `${(ratio / 12).toFixed(1)} tahun ${ref.label}`;
+  if (ratio >= 1)  return `${Math.round(ratio)} bulan ${ref.label}`;
+  return `${Math.round(ratio * 30)} hari ${ref.label}`;
 }
 
 // ─── DEFAULT UI STRINGS ─────────────────────────────────────────
 
 export const DEFAULT_STRINGS = {
   // Calc screen loading messages (shown in sequence)
-  calcMsg1: "🔍 วิเคราะห์คำตอบ...",
-  calcMsg2: "📊 ประมวลผล 4 มิติ...",
-  calcMsg3: "🧮 คำนวณเงินที่เสียไป...",
-  calcMsg4: "💸 ผลลัพธ์น่าตกใจ...",
+  calcMsg1: "🔍 Menganalisis jawaban...",
+  calcMsg2: "📊 Memproses 4 dimensi...",
+  calcMsg3: "🧮 Menghitung uang yang terbuang...",
+  calcMsg4: "💸 Hasilnya mengejutkan...",
 
   // Result screen
-  shareBtn: "📤 แชร์ผลลัพธ์ใน LINE",
-  shareBtnNoLine: "💾 บันทึกผลลัพธ์",
-  shareSaveBtn: "💾 บันทึกรูป",
-  shareCopyBtn: "📋 คัดลอกรูป",
-  shareLongPress: "长按图片 → 储存至相册",
-  shareLongPressNoLine: "长按图片保存到相册",
-  planCtaBtn: "🎯 ดูแผนเอาเงินคืน ↓",
+  shareBtn: "📤 Bagikan hasil via WhatsApp",
+  shareBtnNoLine: "💾 Simpan hasil",
+  shareSaveBtn: "💾 Simpan gambar",
+  shareCopyBtn: "📋 Salin gambar",
+  shareLongPress: "Tekan lama → Simpan ke galeri",
+  shareLongPressNoLine: "Tekan lama untuk simpan ke galeri",
+  planCtaBtn: "🎯 Lihat rencana ambil uang kembali ↓",
   resultLabel: "MPTI RESULT",
-  wasteLabel: "คุณเสียเงินไปโดยไม่รู้ตัว",
-  perMonth: "/เดือน",
-  perYear: "/ปี",
+  wasteLabel: "Kamu telah membuang uang tanpa sadar",
+  perMonth: "/bulan",
+  perYear: "/tahun",
 
   // Plan screen
   recoveryTitle: "RECOVERY PLAN",
-  recoverySubtitle: "เอาเงิน",
-  recoverySuffix: "คืน!",
-  recoveryHint: "ปัดซ้าย-ขวา เพื่อดูวิธีประหยัด",
-  planCardBtn: "ทดลองฟรี 7 วัน",
-  planFooter: "สมัครฟรี · ไม่ต้องบัตรเครดิต · ยกเลิกได้ตลอด",
+  recoverySubtitle: "Ambil kembali",
+  recoverySuffix: "uangmu!",
+  recoveryHint: "Geser kiri-kanan untuk lihat cara hemat",
+  planCardBtn: "Coba gratis 7 hari",
+  planFooter: "Daftar gratis · Tanpa kartu kredit · Bisa dibatalkan kapan saja",
 
   // Login sheet
-  loginTitle: "บันทึกผลลัพธ์ MPTI",
-  loginSubtitle: "สมัครฟรี แล้วดูว่า 7 วันถัดไปคุณประหยัดได้เท่าไหร่",
-  loginLineBtn: "LINE ลงทะเบียนด้วย LINE",
-  loginEmailBtn: "หรือใช้อีเมล",
-  loginPrivacy1: "ไม่โพสต์",
-  loginPrivacy2: "ไม่อ่านข้อความ",
-  loginPrivacy3: "บันทึกผลเท่านั้น",
+  loginTitle: "Simpan hasil MPTI",
+  loginSubtitle: "Daftar gratis dan lihat berapa hemat kamu dalam 7 hari",
+  loginLineBtn: "LINE Daftar dengan LINE",
+  loginEmailBtn: "atau gunakan email",
+  loginPrivacy1: "Tidak posting",
+  loginPrivacy2: "Tidak baca pesan",
+  loginPrivacy3: "Hanya simpan hasil",
 
   // Result screen extras
-  restartBtn: "ทำแบบทดสอบใหม่",
+  restartBtn: "Ulangi tes",
 
   // Success modal
-  successTitle: "สำเร็จ!",
-  successSubtitle: "ทดลองใช้ Cloud Phone ฟรี 7 วัน พร้อมแล้ว",
-  successCta: "ไปที่ Cloud Phone",
+  successTitle: "Berhasil!",
+  successSubtitle: "Coba Cloud Phone gratis 7 hari, siap digunakan",
+  successCta: "Pergi ke Cloud Phone",
 };
 
 // ─── LOCAL STORAGE HELPERS ──────────────────────────────────────

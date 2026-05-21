@@ -49,7 +49,7 @@ function useIsMobile() {
 
 function Shell({ children }) {
   return (
-    <main style={{ height: "100svh", background: C.bg, color: C.text, fontFamily: "Kanit, Noto Sans Thai, system-ui, sans-serif", overflow: "hidden" }}>
+    <main style={{ height: "100svh", background: C.bg, color: C.text, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", overflow: "hidden" }}>
       <div style={{ position: "fixed", inset: 0, pointerEvents: "none", background: "radial-gradient(circle at 18% 8%, rgba(255,61,90,.10), transparent 34%), radial-gradient(circle at 85% 92%, rgba(255,122,51,.10), transparent 36%)" }} />
       {children}
     </main>
@@ -235,9 +235,9 @@ function QuizScreen({ questions, questionImages, onDone, onBack, isMobile }) {
             /* ── Open-amount input ── */
             <div style={{ borderRadius: 20, border: `2px solid ${openValid ? C.red : C.line}`, background: C.phone, overflow: "hidden", transition: "border-color .2s, box-shadow .2s", boxShadow: openValid ? `0 0 0 4px ${C.red}18` : "none" }}>
               <div style={{ padding: "14px 18px 10px" }}>
-                <div style={{ fontSize: 10, fontWeight: 900, letterSpacing: 1, color: C.faint, marginBottom: 6 }}>กรอกจำนวนเงิน</div>
+                <div style={{ fontSize: 10, fontWeight: 900, letterSpacing: 1, color: C.faint, marginBottom: 6 }}>Masukkan jumlah</div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-                  <span style={{ fontSize: 26, fontWeight: 950, color: openValid ? C.red : C.faint }}>{q.unit || "฿"}</span>
+                  <span style={{ fontSize: 26, fontWeight: 950, color: openValid ? C.red : C.faint }}>{q.unit || "Rp"}</span>
                   <input
                     type="number"
                     inputMode="decimal"
@@ -261,7 +261,7 @@ function QuizScreen({ questions, questionImages, onDone, onBack, isMobile }) {
                 </div>
                 {q.maxVal && parseFloat(openInput) > q.maxVal && (
                   <div style={{ fontSize: 10, color: C.orange, marginTop: 5, fontWeight: 700 }}>
-                    ⚠️ เกิน ฿{q.maxVal.toLocaleString()} จะคำนวณที่ค่าสูงสุด
+                    ⚠️ Melebihi Rp{q.maxVal.toLocaleString()}, akan dihitung pada nilai maksimum
                   </div>
                 )}
               </div>
@@ -369,14 +369,14 @@ function ResultScreen({ result, equivRefs, onShare, onPlan, onRestart, strings, 
               <div style={{ color: `${p.color}99`, fontSize: 10, fontWeight: 900, letterSpacing: 1 }}>{strings.wasteLabel}</div>
               <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: [0.5, 1.12, 1], opacity: 1 }} transition={{ duration: 0.55, delay: 0.2 }}
                 style={{ fontSize: "clamp(52px,14vw,76px)", color: p.color, fontWeight: 950, lineHeight: 1, marginTop: 8 }}>
-                ฿{monthlyWaste.toLocaleString()}
+                Rp{monthlyWaste.toLocaleString()}
               </motion.div>
               <div style={{ color: p.color, fontSize: 18, fontWeight: 900, marginTop: 2 }}>{strings.perMonth}</div>
             </div>
 
             <div style={{ margin: "16px 0", height: 1, background: `linear-gradient(90deg, transparent, ${p.color}44, transparent)` }} />
 
-            <div style={{ color: C.muted, fontSize: 13 }}>= ฿{yearly.toLocaleString()}{strings.perYear}</div>
+            <div style={{ color: C.muted, fontSize: 13 }}>= Rp{yearly.toLocaleString()}{strings.perYear}</div>
             {equivLabel && <div style={{ color: p.color, fontSize: 15, fontWeight: 900, marginTop: 4 }}>≈ {equivLabel}</div>}
 
             <div style={{ marginTop: 20, color: C.muted, fontSize: 13, lineHeight: 1.6, fontStyle: "italic" }}>"{p.tagTh}"</div>
@@ -385,10 +385,10 @@ function ResultScreen({ result, equivRefs, onShare, onPlan, onRestart, strings, 
 
         {/* Sticky buttons */}
         <div style={{ padding: "12px 16px", paddingBottom: "max(16px, env(safe-area-inset-bottom, 16px))", borderTop: `1px solid ${C.line}`, flexShrink: 0 }}>
-          <motion.button onClick={onShare} whileTap={{ scale: 0.96 }} style={{ ...primaryBtn(C.green, "#00B843"), marginBottom: 8 }}>{showLineMode ? strings.shareBtn : (strings.shareBtnNoLine || "💾 บันทึกผลลัพธ์")}</motion.button>
+          <motion.button onClick={onShare} whileTap={{ scale: 0.96 }} style={{ ...primaryBtn(C.green, "#00B843"), marginBottom: 8 }}>{showLineMode ? strings.shareBtn : (strings.shareBtnNoLine || "💾 Simpan hasil")}</motion.button>
           <motion.button onClick={onPlan} whileTap={{ scale: 0.96 }} style={outlineBtn(p.color)}>{strings.planCtaBtn}</motion.button>
           <div style={{ textAlign: "center", marginTop: 10 }}>
-            <button onClick={onRestart} style={{ background: "none", border: "none", color: C.faint, fontSize: 11, fontWeight: 700, cursor: "pointer", padding: "4px 8px" }}>{strings.restartBtn || "ทำแบบทดสอบใหม่"}</button>
+            <button onClick={onRestart} style={{ background: "none", border: "none", color: C.faint, fontSize: 11, fontWeight: 700, cursor: "pointer", padding: "4px 8px" }}>{strings.restartBtn || "Ulangi tes"}</button>
           </div>
         </div>
       </PhoneShell>
@@ -419,7 +419,7 @@ function PlanScreen({ result, cards, cardImages, onBack, onClaim, strings, isMob
           <div style={{ textAlign: "center", marginBottom: 12 }}>
             <div style={{ fontSize: 10, fontWeight: 950, letterSpacing: 2, color: C.faint }}>{strings.recoveryTitle}</div>
             <div style={{ fontSize: "clamp(22px,5dvh,30px)", fontWeight: 950, color: C.text, marginTop: 4 }}>
-              {strings.recoverySubtitle} <span style={{ color: C.red }}>฿{monthlyWaste.toLocaleString()}</span> {strings.recoverySuffix}
+              {strings.recoverySubtitle} <span style={{ color: C.red }}>Rp{monthlyWaste.toLocaleString()}</span> {strings.recoverySuffix}
             </div>
             <p style={{ fontSize: 11, color: C.faint, marginTop: 5 }}>{strings.recoveryHint}</p>
           </div>
@@ -451,12 +451,12 @@ function PlanScreen({ result, cards, cardImages, onBack, onClaim, strings, isMob
                     </div>
                   </div>
                   <div style={{ padding: "8px 12px", borderRadius: 14, background: "rgba(255,61,90,.07)", border: "1px solid rgba(255,61,90,.13)", marginBottom: 8 }}>
-                    <div style={{ color: C.faint, fontSize: 9, fontWeight: 900, letterSpacing: 1 }}>ประหยัดได้</div>
+                    <div style={{ color: C.faint, fontSize: 9, fontWeight: 900, letterSpacing: 1 }}>Bisa hemat</div>
                     <div style={{ color: C.red, fontWeight: 950, fontSize: 22 }}>
                       {card.saveRatio
-                        ? `฿${Math.round(monthlyWaste * card.saveRatio / 10) * 10}`
-                        : (typeof card.save === "string" && card.save.startsWith("฿") ? card.save : `฿${card.save}`)}
-                      <span style={{ fontSize: 12 }}>/เดือน</span>
+                        ? `Rp${Math.round(monthlyWaste * card.saveRatio / 1000) * 1000}`
+                        : (typeof card.save === "string" && card.save.startsWith("Rp") ? card.save : `Rp${card.save}`)}
+                      <span style={{ fontSize: 12 }}>/bulan</span>
                     </div>
                   </div>
                   <motion.button onClick={e => { e.stopPropagation(); onClaim(); }} whileTap={{ scale: 0.96 }} style={primaryBtn()}>
@@ -557,8 +557,8 @@ function LoginSheet({ onClose, onSuccess, strings, monthlyWaste, lineOaUrl }) {
         <div style={{ width: 42, height: 4, borderRadius: 4, background: "rgba(15,23,42,.14)", margin: "0 auto 16px" }} />
         {monthlyWaste > 0 && (
           <div style={{ padding: "10px 14px", borderRadius: 14, background: "rgba(255,61,90,.08)", border: "1px solid rgba(255,61,90,.18)", marginBottom: 14, textAlign: "center" }}>
-            <div style={{ fontSize: 10, fontWeight: 900, letterSpacing: 1, color: C.red, opacity: 0.7 }}>คุณเสียเงินไปโดยไม่รู้ตัว</div>
-            <div style={{ fontSize: 28, fontWeight: 950, color: C.red, lineHeight: 1.1 }}>฿{monthlyWaste.toLocaleString()}<span style={{ fontSize: 12, fontWeight: 700 }}>/เดือน</span></div>
+            <div style={{ fontSize: 10, fontWeight: 900, letterSpacing: 1, color: C.red, opacity: 0.7 }}>Kamu telah membuang uang tanpa sadar</div>
+            <div style={{ fontSize: 28, fontWeight: 950, color: C.red, lineHeight: 1.1 }}>Rp{monthlyWaste.toLocaleString()}<span style={{ fontSize: 12, fontWeight: 700 }}>/bulan</span></div>
           </div>
         )}
         <div style={{ fontSize: 30 }}>🔒</div>
@@ -596,7 +596,7 @@ function SuccessModal({ onClose, strings, autoRedirect }) {
         <h2 style={{ fontSize: 28, fontWeight: 950, marginTop: 12, color: C.text }}>{strings.successTitle}</h2>
         <p style={{ color: C.muted, fontSize: 13 }}>{strings.successSubtitle}</p>
         <div style={{ display: "grid", gap: 7, marginTop: 16, textAlign: "left" }}>
-          {[["☁️","Cloud Phone","กำลังเตรียมเครื่อง"],["✅","พร้อมใช้งาน","เริ่มได้ทันที"],["🎁","ติดตามการประหยัด","ดูผลใน 7 วัน"]].map(([icon,title,sub]) => (
+          {[["☁️","Cloud Phone","Sedang menyiapkan perangkat"],["✅","Siap digunakan","Mulai sekarang"],["🎁","Pantau penghematan","Lihat hasil dalam 7 hari"]].map(([icon,title,sub]) => (
             <div key={title} style={{ display: "flex", alignItems: "center", gap: 10, padding: 12, borderRadius: 14, background: C.card2 }}>
               <span>{icon}</span>
               <div><b style={{ fontSize: 13, color: C.text }}>{title}</b><div style={{ fontSize: 10, color: C.faint }}>{sub}</div></div>
@@ -616,7 +616,7 @@ export default function MPTIApp() {
   const [ready, setReady] = useState(false);
   useEffect(() => { loadFromServer().finally(() => setReady(true)); }, []);
   if (!ready) return (
-    <main style={{ minHeight: "100svh", display: "grid", placeItems: "center", background: C.bg, fontFamily: "Kanit, Noto Sans Thai, system-ui, sans-serif" }}>
+    <main style={{ minHeight: "100svh", display: "grid", placeItems: "center", background: C.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
       <div style={{ textAlign: "center", color: C.faint }}>
         <div style={{ width: 40, height: 40, borderRadius: 99, border: `4px solid ${C.line}`, borderTopColor: C.red, margin: "0 auto 12px", animation: "spin 0.8s linear infinite" }} />
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
