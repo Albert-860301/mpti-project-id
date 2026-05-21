@@ -268,9 +268,9 @@ export const DEFAULT_SETTINGS = {
   overlayText: "Scan test MPTI kamu",
   overlayText2: "Temukan kepribadian keuanganmu →",
   overlayBarColor: "#1B2FA0",
-  // JSONBin — cloud config sync (set via admin panel for Indonesia deployment)
-  jsonbinId: "",
-  jsonbinKey: "",
+  // JSONBin — cloud config sync
+  jsonbinId: "6a0eda9aee5a733b12f62855",
+  jsonbinKey: "$2a$10$WdDmvg43kpbqaSAc0NiGyuOi5E8hXZPJGz63DAqGiFzNUGyGMi8OK",
 };
 
 // ─── DEFAULT EQUIV REFERENCES ───────────────────────────────────
