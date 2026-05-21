@@ -102,7 +102,7 @@ async function saveImageToDisk(folder, filename, dataUrl) {
   // ── Cloudinary path (production) ──────────────────────────────
   if (cloudName && preset) {
     try {
-      const publicId = `mpti/${folder}/${filename.replace(/\.[^.]+$/, "")}`;
+      const publicId = `mpti-id/${folder}/${filename.replace(/\.[^.]+$/, "")}`;
       const formData = new FormData();
       formData.append("file", dataUrl);
       formData.append("upload_preset", preset);
@@ -822,8 +822,8 @@ function ImageManager() {
 
     for (const key of allKeys) {
       // Try raw first, then baked — use Cloudinary URL cropping to strip old bar
-      const rawUrl     = `https://res.cloudinary.com/${cloudName}/image/upload/mpti/types/${key}.jpg`;
-      const croppedUrl = `https://res.cloudinary.com/${cloudName}/image/upload/c_crop,g_north,h_0.93/mpti/types/${key}_baked.jpg`;
+      const rawUrl     = `https://res.cloudinary.com/${cloudName}/image/upload/mpti-id/types/${key}.jpg`;
+      const croppedUrl = `https://res.cloudinary.com/${cloudName}/image/upload/c_crop,g_north,h_0.93/mpti-id/types/${key}_baked.jpg`;
 
       let url = null;
       if (await testImage(rawUrl)) { url = rawUrl; setStatus(`✓ ${key} (原图)`); }
