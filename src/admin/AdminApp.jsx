@@ -222,12 +222,12 @@ async function buildShareImageAdmin(src, { overlayText, overlayText2, overlayQrU
   const maxFs2 = Math.round(barH * 0.24);
 
   let fs1 = maxFs1;
-  ctx.font = `500 ${fs1}px 'Plus Jakarta Sans', system-ui, sans-serif`;
-  while (fs1 > 6 && ctx.measureText(line1).width > textAreaW) { fs1--; ctx.font = `500 ${fs1}px 'Plus Jakarta Sans', system-ui, sans-serif`; }
+  ctx.font = `500 ${fs1}px Kanit, system-ui, sans-serif`;
+  while (fs1 > 6 && ctx.measureText(line1).width > textAreaW) { fs1--; ctx.font = `500 ${fs1}px Kanit, system-ui, sans-serif`; }
 
   let fs2 = maxFs2;
-  ctx.font = `400 ${fs2}px 'Plus Jakarta Sans', system-ui, sans-serif`;
-  while (fs2 > 5 && ctx.measureText(line2).width > textAreaW) { fs2--; ctx.font = `400 ${fs2}px 'Plus Jakarta Sans', system-ui, sans-serif`; }
+  ctx.font = `400 ${fs2}px Kanit, system-ui, sans-serif`;
+  while (fs2 > 5 && ctx.measureText(line2).width > textAreaW) { fs2--; ctx.font = `400 ${fs2}px Kanit, system-ui, sans-serif`; }
 
   ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
@@ -237,15 +237,15 @@ async function buildShareImageAdmin(src, { overlayText, overlayText2, overlayQrU
     const blockH  = fs1 + lineGap + fs2;
     const startY  = barY + Math.round((barH - blockH) / 2);
 
-    ctx.font = `500 ${fs1}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+    ctx.font = `500 ${fs1}px Kanit, system-ui, sans-serif`;
     ctx.fillStyle = "#ffffff";
     ctx.fillText(line1, textCX, startY + fs1 / 2);
 
-    ctx.font = `400 ${fs2}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+    ctx.font = `400 ${fs2}px Kanit, system-ui, sans-serif`;
     ctx.fillStyle = "rgba(255,255,255,0.65)";  // softer white for secondary
     ctx.fillText(line2, textCX, startY + fs1 + lineGap + fs2 / 2);
   } else {
-    ctx.font = `500 ${fs1}px 'Plus Jakarta Sans', system-ui, sans-serif`;
+    ctx.font = `500 ${fs1}px Kanit, system-ui, sans-serif`;
     ctx.fillStyle = "#ffffff";
     ctx.fillText(line1 || line2, textCX, barY + barH / 2);
   }
@@ -287,7 +287,7 @@ function LoginGate({ onAuth }) {
     if (pw === stored) onAuth(true); else setErr(true);
   };
   return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: S.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: S.bg, fontFamily: "Kanit, system-ui, sans-serif" }}>
       <div style={{ ...cardStyle(), width: "100%", maxWidth: 360, textAlign: "center" }}>
         <div style={{ fontSize: 40, marginBottom: 8 }}>🔐</div>
         <h2 style={{ fontSize: 20, fontWeight: 800, color: S.text }}>MPTI Admin</h2>
@@ -1717,7 +1717,7 @@ export default function AdminApp() {
   if (!authed) return <LoginGate onAuth={setAuthed} />;
 
   if (!synced) return (
-    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: S.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: S.bg, fontFamily: "Kanit, system-ui, sans-serif" }}>
       <div style={{ textAlign: "center", color: S.muted }}>
         <div style={{ width: 40, height: 40, borderRadius: 99, border: `4px solid ${S.border}`, borderTopColor: S.accent, margin: "0 auto 12px", animation: "spin 0.8s linear infinite" }} />
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
@@ -1727,7 +1727,7 @@ export default function AdminApp() {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: S.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: S.text }}>
+    <div style={{ minHeight: "100vh", background: S.bg, fontFamily: "Kanit, system-ui, sans-serif", color: S.text }}>
       <div style={{ position: "sticky", top: 0, zIndex: 20, background: "#fff", borderBottom: `1px solid ${S.border}`, padding: "10px 20px", display: "flex", alignItems: "center", gap: 12 }}>
         <button onClick={() => setSideOpen(!sideOpen)} style={{ background: "none", border: "none", fontSize: 20, cursor: "pointer" }}>☰</button>
         <span style={{ fontSize: 18, fontWeight: 900 }}>MPTI Admin</span>

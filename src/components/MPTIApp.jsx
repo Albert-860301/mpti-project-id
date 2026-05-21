@@ -49,7 +49,7 @@ function useIsMobile() {
 
 function Shell({ children }) {
   return (
-    <main style={{ height: "100svh", background: C.bg, color: C.text, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", overflow: "hidden" }}>
+    <main style={{ height: "100svh", background: C.bg, color: C.text, fontFamily: "Kanit, system-ui, sans-serif", overflow: "hidden" }}>
       <div style={{ position: "fixed", inset: 0, pointerEvents: "none", background: "radial-gradient(circle at 18% 8%, rgba(255,61,90,.10), transparent 34%), radial-gradient(circle at 85% 92%, rgba(255,122,51,.10), transparent 36%)" }} />
       {children}
     </main>
@@ -616,7 +616,7 @@ export default function MPTIApp() {
   const [ready, setReady] = useState(false);
   useEffect(() => { loadFromServer().finally(() => setReady(true)); }, []);
   if (!ready) return (
-    <main style={{ minHeight: "100svh", display: "grid", placeItems: "center", background: C.bg, fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+    <main style={{ minHeight: "100svh", display: "grid", placeItems: "center", background: C.bg, fontFamily: "Kanit, system-ui, sans-serif" }}>
       <div style={{ textAlign: "center", color: C.faint }}>
         <div style={{ width: 40, height: 40, borderRadius: 99, border: `4px solid ${C.line}`, borderTopColor: C.red, margin: "0 auto 12px", animation: "spin 0.8s linear infinite" }} />
         <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
