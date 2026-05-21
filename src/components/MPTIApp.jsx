@@ -137,7 +137,7 @@ function StartScreen({ onStart, stats, fakeCount, coverImage, coverContent, sett
           <div style={{ padding: "10px 12px", borderRadius: 18, background: C.phone, border: `1px solid ${C.line}`, marginBottom: 10 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: C.muted, fontWeight: 750 }}>
               <span>🧑 👩 🧒</span>
-              <span>ทดสอบแล้ว <b style={{ color: C.red }}>{displayCount.toLocaleString()}</b> คน</span>
+              <span>Sudah diuji <b style={{ color: C.red }}>{displayCount.toLocaleString()}</b> orang</span>
             </div>
           </div>
           <motion.button onClick={onStart} whileTap={{ scale: 0.96 }} style={primaryBtn()}>{c.ctaBtn}</motion.button>
@@ -280,7 +280,7 @@ function QuizScreen({ questions, questionImages, onDone, onBack, isMobile }) {
                   letterSpacing: 0.5,
                 }}
               >
-                {openValid ? "ยืนยัน ›" : "กรอกตัวเลขก่อน"}
+                {openValid ? "Lanjut ›" : "Isi angka terlebih dahulu"}
               </motion.button>
             </div>
           ) : (
@@ -506,9 +506,9 @@ function SharePreview({ result, images, strings, onClose, showLineMode }) {
     }
   };
 
-  const copyLabel = status === "loading" ? "กำลังโหลด…"
-    : status === "done" ? "คัดลอกแล้ว ✓"
-    : (strings?.shareCopyBtn || "📋 คัดลอกรูป");
+  const copyLabel = status === "loading" ? "Memuat…"
+    : status === "done" ? "Tersalin ✓"
+    : (strings?.shareCopyBtn || "📋 Salin gambar");
 
   const longPressHint = showLineMode
     ? (strings?.shareLongPress || "长按图片 → 储存至相册")
@@ -529,7 +529,7 @@ function SharePreview({ result, images, strings, onClose, showLineMode }) {
           )}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, padding: 12 }}>
-          <button onClick={onClose} style={modalBtn(C.card2, C.muted)}>ปิด</button>
+          <button onClick={onClose} style={modalBtn(C.card2, C.muted)}>Tutup</button>
           {isTouch ? (
             <button onClick={onClose} style={modalBtn(C.green, "#fff")}>OK</button>
           ) : (

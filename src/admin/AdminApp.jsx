@@ -1131,7 +1131,7 @@ function StringsEditor() {
   const saveRefs = () => { saveEquivRefs(refs); setRefSaved(true); syncToServer(); setTimeout(() => setRefSaved(false), 2000); };
   const resetRefs = () => { if (confirm("Reset to defaults?")) { setRefs(DEFAULT_EQUIV_REFS); saveEquivRefs(DEFAULT_EQUIV_REFS); } };
   const upRef = (i, field, val) => setRefs(r => r.map((x, j) => j === i ? { ...x, [field]: field === "price" ? +val : val } : x));
-  const addRef = () => setRefs(r => [...r, { label: "ชื่อ", price: 100 }]);
+  const addRef = () => setRefs(r => [...r, { label: "Nama", price: 100000 }]);
   const removeRef = i => setRefs(r => r.filter((_, j) => j !== i));
 
   const field = (label, key, mono = false) => (
@@ -1178,19 +1178,19 @@ function StringsEditor() {
       {sectionCard("🔄 Equiv References（≈ 换算参考）", (
         <div>
           <p style={{ fontSize: 12, color: S.muted, marginBottom: 10 }}>
-            系统会根据月亏损金额自动选出最合适的参考项显示「≈ X เดือน Netflix」。
+            System auto-selects the best reference item to display "≈ X bulan Netflix" based on monthly waste.
           </p>
           {refs.map((ref, i) => (
             <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 100px 32px", gap: 6, marginBottom: 6, alignItems: "center" }}>
               <input value={ref.label} onChange={e => upRef(i, "label", e.target.value)}
-                placeholder="ชื่อ" style={inputStyle()} />
+                placeholder="Nama" style={inputStyle()} />
               <input type="number" value={ref.price} onChange={e => upRef(i, "price", e.target.value)}
-                placeholder="ราคา" style={inputStyle()} />
+                placeholder="Harga" style={inputStyle()} />
               <button onClick={() => removeRef(i)} style={{ ...btn(S.red), padding: "8px 10px" }}>✕</button>
             </div>
           ))}
           <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-            <button onClick={addRef} style={btn("#F1F5F9", S.text)}>+ เพิ่ม</button>
+            <button onClick={addRef} style={btn("#F1F5F9", S.text)}>+ Tambah</button>
             <button onClick={resetRefs} style={btn("#F1F5F9", S.muted)}>Reset</button>
             <button onClick={saveRefs} style={btn(S.green)}>{refSaved ? "✓ Saved!" : "Save Refs"}</button>
           </div>
@@ -1200,8 +1200,8 @@ function StringsEditor() {
       {sectionCard("🎯 Plan / Recovery Screen", (
         <div style={{ display: "grid", gap: 8 }}>
           {field("Recovery title", "recoveryTitle")}
-          {field("Subtitle prefix（เอาเงิน）", "recoverySubtitle")}
-          {field("Subtitle suffix（คืน!）", "recoverySuffix")}
+          {field("Subtitle prefix（e.g. Ambil kembali）", "recoverySubtitle")}
+          {field("Subtitle suffix（e.g. uangmu!）", "recoverySuffix")}
           {field("Swipe hint text", "recoveryHint")}
           {field("Card CTA button", "planCardBtn")}
           {field("Footer note", "planFooter")}
@@ -1360,11 +1360,11 @@ function OverlaySettings({ settings, upSetting, onImagesUpdated }) {
         <div style={{ display: "grid", gap: 8 }}>
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>第一行文字（较大，常规字重）</label>
-            <input value={settings.overlayText || ""} onChange={e => upSetting("overlayText", e.target.value)} style={inputStyle()} placeholder="e.g. สแกนทดสอบ MPTI ของคุณ" />
+            <input value={settings.overlayText || ""} onChange={e => upSetting("overlayText", e.target.value)} style={inputStyle()} placeholder="e.g. Scan test MPTI kamu" />
           </div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>第二行文字（较小，细字重，灰色）</label>
-            <input value={settings.overlayText2 || ""} onChange={e => upSetting("overlayText2", e.target.value)} style={inputStyle()} placeholder="e.g. ค้นพบบุคลิกการใช้เงินของคุณ →" />
+            <label style={{ fontSize: 11, fontWeight: 700, color: S.muted }}>Line 2 (smaller, lighter weight)</label>
+            <input value={settings.overlayText2 || ""} onChange={e => upSetting("overlayText2", e.target.value)} style={inputStyle()} placeholder="e.g. Temukan kepribadian keuanganmu →" />
           </div>
           <p style={{ fontSize: 10, color: S.muted, margin: 0 }}>深色底栏在图片下方：Logo（左）+ 两行白色文字（中）+ 白色二维码（右）。不遮挡图片内容。</p>
         </div>
